@@ -57,6 +57,7 @@
         .btn-danger { background: linear-gradient(135deg, var(--danger), #FF6B4A); border: none; padding: 12px 24px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; }
         
         select { width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: 12px; color: white; font-size: 14px; margin: 8px 0 16px; }
+        select option { background: var(--dark-card); }
         
         .result-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 16px; margin-top: 15px; }
         .result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: 13px; }
@@ -72,6 +73,11 @@
         
         .loading { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 0.6s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .status-indicator { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+        .status-green { background: var(--success); }
+        .status-yellow { background: var(--warning); }
+        .status-red { background: var(--danger); }
     </style>
 </head>
 <body>
@@ -84,7 +90,7 @@
         <div class="quantum-badge-header">⚛️ CHSH S=2.76 · 38% ABOVE CLASSICAL · IBM VERIFIED</div>
     </div>
     
-    <div class="stats-row">
+    <div class="stats-row" id="dashboardStats">
         <div class="stat-card"><div class="stat-value" id="stocksCount">50</div><div class="stat-label">JSE Stocks</div></div>
         <div class="stat-card"><div class="stat-value" id="quantumFactor">1.38</div><div class="stat-label">Quantum Factor</div></div>
         <div class="stat-card"><div class="stat-value" id="sharpeRatio">2.1</div><div class="stat-label">Sharpe Ratio</div></div>
@@ -99,7 +105,7 @@
             <p style="font-size:12px; color:var(--text-secondary); margin:10px 0;">CHSH S=2.76 · MPS Tensor Network</p>
             
             <label style="font-size:12px; font-family:var(--font-mono);">Select Stocks</label>
-            <select id="stockSelect" multiple style="height:120px;">
+            <select id="stockSelect" multiple style="height:160px;">
                 <option value="NPN">Naspers (NPN)</option>
                 <option value="FSR">FirstRand (FSR)</option>
                 <option value="SBK">Standard Bank (SBK)</option>
@@ -126,11 +132,11 @@
             
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
                 <div>
-                    <label style="font-size:11px; font-family:var(--font-mono);">Target Return</label>
+                    <label style="font-size:11px; font-family:var(--font-mono);">Target Return (%)</label>
                     <input type="number" id="targetReturn" value="12" step="0.5" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); border-radius:8px; color:white;">
                 </div>
                 <div>
-                    <label style="font-size:11px; font-family:var(--font-mono);">Risk-Free Rate</label>
+                    <label style="font-size:11px; font-family:var(--font-mono);">Risk-Free Rate (%)</label>
                     <input type="number" id="riskFreeRate" value="6.5" step="0.1" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); border-radius:8px; color:white;">
                 </div>
             </div>
@@ -198,104 +204,193 @@
 
 <script>
     // ============================================================
-    // QUANTUM ALPHA ENGINE — FRONTEND
+    // QUANTUM ALPHA ENGINE — FRONTEND (ROBUST)
     // ============================================================
     
-    const BACKEND_URL = 'https://mindcell-quantum.onrender.com';
+    const BACKEND_URL = 'https://quantum-alpha-engine.onrender.com';
     let alphaChart = null;
     
+    // ============================================================
+    // STOCKS
+    // ============================================================
+    const STOCKS = [
+        { symbol: "NPN", name: "Naspers", sector: "Media" },
+        { symbol: "FSR", name: "FirstRand", sector: "Banking" },
+        { symbol: "SBK", name: "Standard Bank", sector: "Banking" },
+        { symbol: "AGL", name: "Anglo American", sector: "Mining" },
+        { symbol: "BIL", name: "BHP", sector: "Mining" },
+        { symbol: "MTN", name: "MTN Group", sector: "Telecom" },
+        { symbol: "VOD", name: "Vodacom", sector: "Telecom" },
+        { symbol: "CPI", name: "Capitec", sector: "Banking" },
+        { symbol: "PPH", name: "Pepkor", sector: "Retail" },
+        { symbol: "SNH", name: "Steinhoff", sector: "Retail" }
+    ];
+    
+    // ============================================================
+    // DOM READY
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        populateSelect();
+        fetchQuantumStatus();
+        setupEventListeners();
+    });
+    
+    // ============================================================
+    // POPULATE SELECT
+    // ============================================================
+    function populateSelect() {
+        const select = document.getElementById('stockSelect');
+        select.innerHTML = '';
+        STOCKS.forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.symbol;
+            opt.textContent = `${s.name} (${s.symbol})`;
+            select.appendChild(opt);
+        });
+    }
+    
+    // ============================================================
+    // QUANTUM STATUS
+    // ============================================================
     async function fetchQuantumStatus() {
         try {
             const res = await fetch(`${BACKEND_URL}/api/quantum/status`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
-            document.getElementById('quantumFactor').innerText = (1 + (data.chsh_s - 2) / 2).toFixed(2);
+            const factor = (1 + (data.chsh_s - 2) / 2).toFixed(2);
+            document.getElementById('quantumFactor').innerText = factor;
             document.getElementById('correlation').innerText = (data.correlation * 100).toFixed(1);
-        } catch(e) { console.error(e); }
+        } catch (e) {
+            console.error('Quantum status error:', e);
+        }
     }
     
-    document.getElementById('selectAllBtn').addEventListener('click', () => {
-        const select = document.getElementById('stockSelect');
-        for (let option of select.options) {
-            option.selected = true;
-        }
-    });
-    
-    document.getElementById('runAlphaBtn').addEventListener('click', async () => {
-        const select = document.getElementById('stockSelect');
-        const stocks = Array.from(select.selectedOptions).map(opt => opt.value);
-        if (stocks.length === 0) { alert('Select at least one stock'); return; }
+    // ============================================================
+    // EVENT LISTENERS
+    // ============================================================
+    function setupEventListeners() {
+        document.getElementById('selectAllBtn').addEventListener('click', () => {
+            const select = document.getElementById('stockSelect');
+            for (let opt of select.options) opt.selected = true;
+        });
         
-        const resultDiv = document.getElementById('alphaResult');
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = '<div class="loading"></div> Calculating quantum alpha...';
+        document.getElementById('runAlphaBtn').addEventListener('click', runAlpha);
+        document.getElementById('optimizeBtn').addEventListener('click', runOptimize);
+        document.getElementById('riskBtn').addEventListener('click', runRisk);
+        document.getElementById('backtestBtn').addEventListener('click', runBacktest);
+    }
+    
+    // ============================================================
+    // GET SELECTED STOCKS
+    // ============================================================
+    function getSelectedStocks() {
+        const select = document.getElementById('stockSelect');
+        return Array.from(select.selectedOptions).map(opt => opt.value);
+    }
+    
+    // ============================================================
+    // RUN ALPHA
+    // ============================================================
+    async function runAlpha() {
+        const stocks = getSelectedStocks();
+        if (stocks.length === 0) {
+            showResult('alphaResult', '⚠️ Select at least one stock');
+            return;
+        }
+        
+        showLoading('alphaResult');
         
         try {
             const res = await fetch(`${BACKEND_URL}/api/alpha`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ stock_list: stocks, lookback_days: 252, quantum_enhanced: true })
+                body: JSON.stringify({ stock_list: stocks, quantum_enhanced: true })
             });
+            
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             
+            if (!data.alphas || Object.keys(data.alphas).length === 0) {
+                showResult('alphaResult', '⚠️ No alpha data returned');
+                return;
+            }
+            
             let html = `<div style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
-                ⚛️ CHSH S=2.76 · ${data.quantum_factor.toFixed(2)}x enhancement
+                ⚛️ CHSH S=2.76 · ${(data.quantum_factor || 1.38).toFixed(2)}x enhancement
             </div>`;
             
+            let totalAlpha = 0;
+            let count = 0;
+            
             for (const [stock, alpha] of Object.entries(data.alphas)) {
-                const color = alpha > 0 ? 'var(--success)' : 'var(--danger)';
-                const sign = alpha > 0 ? '+' : '';
+                const numAlpha = parseFloat(alpha) || 0;
+                totalAlpha += numAlpha;
+                count++;
+                const color = numAlpha > 0 ? 'var(--success)' : 'var(--danger)';
+                const sign = numAlpha > 0 ? '+' : '';
                 html += `<div class="result-item">
                     <span>${stock}</span>
-                    <span style="color:${color}; font-weight:700;">${sign}${alpha.toFixed(2)}%</span>
+                    <span style="color:${color}; font-weight:700;">${sign}${numAlpha.toFixed(2)}%</span>
                 </div>`;
             }
             
+            const avgAlpha = count > 0 ? totalAlpha / count : 0;
+            document.getElementById('alphaAvg').innerText = (avgAlpha > 0 ? '+' : '') + avgAlpha.toFixed(2);
+            
             html += `<div style="margin-top:10px; font-size:10px; color:var(--text-secondary);">
-                Quantum-enhanced alpha · ${data.timestamp}
+                ${data.timestamp ? new Date(data.timestamp).toLocaleString() : ''}
             </div>`;
             
-            resultDiv.innerHTML = html;
-            
-            // Update chart
+            showResult('alphaResult', html);
             updateAlphaChart(data.alphas);
             
-        } catch(e) {
-            resultDiv.innerHTML = `<div style="color:var(--danger);">❌ Error: ${e.message}</div>`;
+        } catch (e) {
+            showResult('alphaResult', `❌ Error: ${e.message}`);
         }
-    });
+    }
     
-    document.getElementById('optimizeBtn').addEventListener('click', async () => {
-        const select = document.getElementById('stockSelect');
-        const stocks = Array.from(select.selectedOptions).map(opt => opt.value);
-        if (stocks.length === 0) { alert('Select at least one stock'); return; }
+    // ============================================================
+    // RUN OPTIMIZE
+    // ============================================================
+    async function runOptimize() {
+        const stocks = getSelectedStocks();
+        if (stocks.length === 0) {
+            showResult('portfolioResult', '⚠️ Select at least one stock');
+            return;
+        }
         
-        const targetReturn = parseFloat(document.getElementById('targetReturn').value) / 100;
-        const riskFreeRate = parseFloat(document.getElementById('riskFreeRate').value) / 100;
+        const targetReturn = parseFloat(document.getElementById('targetReturn').value) || 12;
+        const riskFreeRate = parseFloat(document.getElementById('riskFreeRate').value) || 6.5;
         
-        const resultDiv = document.getElementById('portfolioResult');
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = '<div class="loading"></div> Optimizing portfolio...';
+        showLoading('portfolioResult');
         
         try {
             const res = await fetch(`${BACKEND_URL}/api/portfolio/optimize`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    stocks, 
-                    target_return: targetReturn, 
-                    risk_free_rate: riskFreeRate,
-                    quantum_enhanced: true 
+                body: JSON.stringify({
+                    stocks,
+                    target_return: targetReturn / 100,
+                    risk_free_rate: riskFreeRate / 100,
+                    quantum_enhanced: true
                 })
             });
+            
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             
+            if (!data.weights || Object.keys(data.weights).length === 0) {
+                showResult('portfolioResult', '⚠️ No portfolio data returned');
+                return;
+            }
+            
             let html = `<div style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
-                ⚛️ Quantum Portfolio · Sharpe Ratio: ${data.sharpe_ratio}
+                ⚛️ Quantum Portfolio · Sharpe Ratio: ${(data.sharpe_ratio || 0).toFixed(2)}
             </div>`;
             
-            const sorted = Object.entries(data.weights).sort((a,b) => b[1] - a[1]);
+            const sorted = Object.entries(data.weights).sort((a, b) => b[1] - a[1]);
             for (const [stock, weight] of sorted) {
-                if (weight > 0.01) {
+                if (weight > 0.005) {
                     html += `<div class="result-item">
                         <span>${stock}</span>
                         <span class="result-value">${(weight * 100).toFixed(1)}%</span>
@@ -303,30 +398,36 @@
                 }
             }
             
+            const expReturn = data.expected_return || 0;
+            const expRisk = data.expected_risk || 0;
             html += `<div style="margin-top:10px; font-size:11px; color:var(--text-secondary);">
-                Expected Return: ${(data.expected_return * 100).toFixed(1)}% · Risk: ${(data.expected_risk * 100).toFixed(1)}%
+                Expected Return: ${(expReturn * 100).toFixed(1)}% · Risk: ${(expRisk * 100).toFixed(1)}%
             </div>`;
             
-            resultDiv.innerHTML = html;
+            document.getElementById('sharpeRatio').innerText = (data.sharpe_ratio || 0).toFixed(2);
             
-        } catch(e) {
-            resultDiv.innerHTML = `<div style="color:var(--danger);">❌ Error: ${e.message}</div>`;
+            showResult('portfolioResult', html);
+            
+        } catch (e) {
+            showResult('portfolioResult', `❌ Error: ${e.message}`);
         }
-    });
+    }
     
-    document.getElementById('riskBtn').addEventListener('click', async () => {
-        // Simulate a portfolio
-        const select = document.getElementById('stockSelect');
-        const stocks = Array.from(select.selectedOptions).map(opt => opt.value);
-        if (stocks.length === 0) { alert('Select stocks first'); return; }
+    // ============================================================
+    // RUN RISK
+    // ============================================================
+    async function runRisk() {
+        const stocks = getSelectedStocks();
+        if (stocks.length === 0) {
+            showResult('riskResult', '⚠️ Select at least one stock');
+            return;
+        }
         
         const portfolio = {};
         const weight = 1 / stocks.length;
         stocks.forEach(s => portfolio[s] = weight);
         
-        const resultDiv = document.getElementById('riskResult');
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = '<div class="loading"></div> Calculating quantum VaR...';
+        showLoading('riskResult');
         
         try {
             const res = await fetch(`${BACKEND_URL}/api/risk/var`, {
@@ -334,65 +435,99 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ portfolio, confidence: 0.95, horizon_days: 10 })
             });
+            
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             
-            resultDiv.innerHTML = `
-                <div class="result-item"><span>VaR 95% (10-day)</span><span class="result-value" style="color:var(--danger);">${data.var_95.toFixed(2)}%</span></div>
-                <div class="result-item"><span>CVaR 95% (Expected Shortfall)</span><span class="result-value" style="color:var(--warning);">${data.cvar_95.toFixed(2)}%</span></div>
-                <div class="result-item"><span>Max Drawdown</span><span class="result-value" style="color:var(--danger);">${data.max_drawdown.toFixed(2)}%</span></div>
+            const var95 = data.var_95 || 0;
+            const cvar95 = data.cvar_95 || 0;
+            const drawdown = data.max_drawdown || 0;
+            const factor = data.quantum_factor || 1.38;
+            
+            document.getElementById('var95').innerText = var95.toFixed(2);
+            
+            let html = `
+                <div class="result-item"><span>VaR 95% (10-day)</span><span class="result-value" style="color:var(--danger);">${var95.toFixed(2)}%</span></div>
+                <div class="result-item"><span>CVaR 95% (Expected Shortfall)</span><span class="result-value" style="color:var(--warning);">${cvar95.toFixed(2)}%</span></div>
+                <div class="result-item"><span>Max Drawdown</span><span class="result-value" style="color:var(--danger);">${drawdown.toFixed(2)}%</span></div>
                 <div style="margin-top:8px; font-size:10px; color:var(--text-secondary);">
-                    ⚛️ CHSH S=2.76 · ${data.quantum_factor.toFixed(2)}x enhancement
+                    ⚛️ CHSH S=2.76 · ${factor.toFixed(2)}x enhancement
                 </div>
             `;
             
-        } catch(e) {
-            resultDiv.innerHTML = `<div style="color:var(--danger);">❌ Error: ${e.message}</div>`;
+            showResult('riskResult', html);
+            
+        } catch (e) {
+            showResult('riskResult', `❌ Error: ${e.message}`);
         }
-    });
+    }
     
-    document.getElementById('backtestBtn').addEventListener('click', async () => {
-        const resultDiv = document.getElementById('backtestResult');
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = '<div class="loading"></div> Running quantum backtest...';
+    // ============================================================
+    // RUN BACKTEST
+    // ============================================================
+    async function runBacktest() {
+        const stocks = getSelectedStocks();
+        if (stocks.length === 0) {
+            showResult('backtestResult', '⚠️ Select at least one stock');
+            return;
+        }
+        
+        showLoading('backtestResult');
         
         try {
-            const select = document.getElementById('stockSelect');
-            const stocks = Array.from(select.selectedOptions).map(opt => opt.value);
-            
             const res = await fetch(`${BACKEND_URL}/api/backtest`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    stocks: stocks.length > 0 ? stocks : ['NPN', 'FSR', 'SBK'],
-                    start_date: '2021-01-01',
-                    end_date: '2026-01-01',
-                    quantum_enhanced: true 
-                })
+                body: JSON.stringify({ stocks, quantum_enhanced: true })
             });
+            
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             
-            resultDiv.innerHTML = `
-                <div class="result-item"><span>Total Return</span><span class="result-value" style="color:var(--success);">+${(data.total_return * 100).toFixed(1)}%</span></div>
-                <div class="result-item"><span>Sharpe Ratio</span><span class="result-value">${data.sharpe_ratio}</span></div>
-                <div class="result-item"><span>Max Drawdown</span><span class="result-value" style="color:var(--danger);">${(data.max_drawdown * 100).toFixed(1)}%</span></div>
-                <div class="result-item"><span>Win Rate</span><span class="result-value">${(data.win_rate * 100).toFixed(0)}%</span></div>
+            const totalReturn = data.total_return || 0;
+            const sharpe = data.sharpe_ratio || 0;
+            const drawdown = data.max_drawdown || 0;
+            const winRate = data.win_rate || 0;
+            
+            let html = `
+                <div class="result-item"><span>Total Return</span><span class="result-value" style="color:${totalReturn > 0 ? 'var(--success)' : 'var(--danger)'};">${(totalReturn * 100).toFixed(1)}%</span></div>
+                <div class="result-item"><span>Sharpe Ratio</span><span class="result-value">${sharpe.toFixed(2)}</span></div>
+                <div class="result-item"><span>Max Drawdown</span><span class="result-value" style="color:var(--danger);">${(drawdown * 100).toFixed(1)}%</span></div>
+                <div class="result-item"><span>Win Rate</span><span class="result-value">${(winRate * 100).toFixed(0)}%</span></div>
                 <div style="margin-top:8px; font-size:10px; color:var(--text-secondary);">
                     ⚛️ CHSH S=2.76 · Quantum Enhanced
                 </div>
             `;
             
-        } catch(e) {
-            resultDiv.innerHTML = `<div style="color:var(--danger);">❌ Error: ${e.message}</div>`;
+            showResult('backtestResult', html);
+            
+        } catch (e) {
+            showResult('backtestResult', `❌ Error: ${e.message}`);
         }
-    });
+    }
+    
+    // ============================================================
+    // UI HELPERS
+    // ============================================================
+    function showLoading(id) {
+        const el = document.getElementById(id);
+        el.style.display = 'block';
+        el.innerHTML = '<div class="loading"></div> Processing...';
+    }
+    
+    function showResult(id, html) {
+        const el = document.getElementById(id);
+        el.style.display = 'block';
+        el.innerHTML = html;
+    }
     
     function updateAlphaChart(alphas) {
         const ctx = document.getElementById('alphaChart').getContext('2d');
         const labels = Object.keys(alphas);
-        const values = Object.values(alphas);
+        const values = Object.values(alphas).map(v => parseFloat(v) || 0);
         const colors = values.map(v => v > 0 ? '#00FF88' : '#EF476F');
         
-        if (alphaChart) { alphaChart.destroy(); }
+        if (alphaChart) alphaChart.destroy();
         
         alphaChart = new Chart(ctx, {
             type: 'bar',
@@ -429,10 +564,9 @@
         });
     }
     
-    // Initial load
-    fetchQuantumStatus();
-    
-    // Particles
+    // ============================================================
+    // PARTICLES
+    // ============================================================
     particlesJS('particles-js', {
         particles: {
             number: { value: 55 },
