@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quantum Alpha Engine — MindTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #00B4D8;
+            --primary-dark: #0096C7;
+            --secondary: #00F5D4;
+            --quantum: #8A2BE2;
+            --success: #00FF88;
+            --danger: #EF476F;
+            --warning: #FFD166;
+            --dark-bg: #05080F;
+            --dark-card: #0A0F1A;
+            --glass-border: rgba(0,180,216,0.2);
+            --text-primary: #E8EDF5;
+            --text-secondary: #8A99B0;
+            --font-exo: 'Exo 2', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+        
+        body { font-family: var(--font-exo); background: var(--dark-bg); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        
+        .glass-card { background: rgba(15, 25, 45, 0.45); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 24px; margin-bottom: 24px; transition: all 0.3s; }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,180,216,0.15); }
+        
+        .header { text-align: center; padding: 20px 0; }
+        .logo { max-width: 280px; width: 100%; filter: drop-shadow(0 0 20px #00B4D8); }
+        .tagline { font-size: 0.75rem; color: var(--secondary); letter-spacing: 3px; margin-top: 8px; font-family: var(--font-mono); }
+        .quantum-badge-header { display: inline-block; background: rgba(138,43,226,0.2); border: 1px solid var(--quantum); border-radius: 60px; padding: 8px 20px; font-size: 11px; font-family: var(--font-mono); color: var(--secondary); margin: 10px 0; }
+        
+        .stats-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px; margin-bottom: 25px; }
+        .stat-card { background: rgba(15, 25, 45, 0.45); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 18px; text-align: center; }
+        .stat-value { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, var(--secondary), var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .stat-label { font-size: 0.65rem; color: var(--text-secondary); margin-top: 5px; font-family: var(--font-mono); }
+        
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+        .three-column { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+        
+        .btn-primary { background: linear-gradient(135deg, var(--quantum), var(--primary)); border: none; padding: 12px 24px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px var(--quantum-glow); }
+        .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 12px 24px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary:hover { background: rgba(0,180,216,0.1); border-color: var(--primary); }
+        .btn-danger { background: linear-gradient(135deg, var(--danger), #FF6B4A); border: none; padding: 12px 24px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; }
+        
+        select { width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: 12px; color: white; font-size: 14px; margin: 8px 0 16px; }
+        
+        .result-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 16px; margin-top: 15px; }
+        .result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: 13px; }
+        .result-value { font-weight: 600; color: var(--secondary); }
+        
+        .chart-container { height: 300px; margin-top: 15px; }
+        
+        .footer { text-align: center; font-size: 0.7rem; color: var(--text-secondary); padding: 20px; border-top: 1px solid var(--glass-border); margin-top: 15px; font-family: var(--font-mono); }
+        .quantum-line { font-size: 0.7rem; margin-bottom: 8px; letter-spacing: 0.5px; color: var(--secondary); }
+        
+        @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(3, 1fr); } .two-column { grid-template-columns: 1fr; } .three-column { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+        
+        .loading { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<div class="container">
+    <div class="header">
+        <img src="https://i.postimg.cc/yYPDHtky/Luvuno-Quantum-Chat-image-removebg-preview.png" alt="Quantum Alpha Engine" class="logo">
+        <div class="tagline">⚛️ QUANTUM ALPHA ENGINE · CHSH S=2.76</div>
+        <div class="quantum-badge-header">⚛️ CHSH S=2.76 · 38% ABOVE CLASSICAL · IBM VERIFIED</div>
+    </div>
+    
+    <div class="stats-row">
+        <div class="stat-card"><div class="stat-value" id="stocksCount">50</div><div class="stat-label">JSE Stocks</div></div>
+        <div class="stat-card"><div class="stat-value" id="quantumFactor">1.38</div><div class="stat-label">Quantum Factor</div></div>
+        <div class="stat-card"><div class="stat-value" id="sharpeRatio">2.1</div><div class="stat-label">Sharpe Ratio</div></div>
+        <div class="stat-card"><div class="stat-value" id="alphaAvg">+0.67</div><div class="stat-label">Avg Alpha (%)</div></div>
+        <div class="stat-card"><div class="stat-value" id="var95">-1.23</div><div class="stat-label">VaR 95% (%)</div></div>
+        <div class="stat-card"><div class="stat-value" id="correlation">98.4</div><div class="stat-label">Quantum Corr (%)</div></div>
+    </div>
+    
+    <div class="two-column">
+        <div class="glass-card">
+            <h3><i class="fas fa-brain"></i> Quantum Alpha Engine</h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin:10px 0;">CHSH S=2.76 · MPS Tensor Network</p>
+            
+            <label style="font-size:12px; font-family:var(--font-mono);">Select Stocks</label>
+            <select id="stockSelect" multiple style="height:120px;">
+                <option value="NPN">Naspers (NPN)</option>
+                <option value="FSR">FirstRand (FSR)</option>
+                <option value="SBK">Standard Bank (SBK)</option>
+                <option value="AGL">Anglo American (AGL)</option>
+                <option value="BIL">BHP (BIL)</option>
+                <option value="MTN">MTN (MTN)</option>
+                <option value="VOD">Vodacom (VOD)</option>
+                <option value="CPI">Capitec (CPI)</option>
+                <option value="PPH">Pepkor (PPH)</option>
+                <option value="SNH">Steinhoff (SNH)</option>
+            </select>
+            
+            <div style="display:flex; gap:12px; margin:12px 0;">
+                <button class="btn-primary" id="runAlphaBtn" style="flex:1;"><i class="fas fa-chart-line"></i> Calculate Alpha</button>
+                <button class="btn-secondary" id="selectAllBtn">Select All</button>
+            </div>
+            
+            <div id="alphaResult" style="display:none;" class="result-box"></div>
+        </div>
+        
+        <div class="glass-card">
+            <h3><i class="fas fa-chart-pie"></i> Portfolio Optimizer</h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin:10px 0;">MPS Tensor Network · Quantum Enhanced</p>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div>
+                    <label style="font-size:11px; font-family:var(--font-mono);">Target Return</label>
+                    <input type="number" id="targetReturn" value="12" step="0.5" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); border-radius:8px; color:white;">
+                </div>
+                <div>
+                    <label style="font-size:11px; font-family:var(--font-mono);">Risk-Free Rate</label>
+                    <input type="number" id="riskFreeRate" value="6.5" step="0.1" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); border-radius:8px; color:white;">
+                </div>
+            </div>
+            
+            <button class="btn-primary" id="optimizeBtn" style="width:100%; margin-top:12px;"><i class="fas fa-chart-pie"></i> Optimize Portfolio</button>
+            
+            <div id="portfolioResult" style="display:none;" class="result-box"></div>
+        </div>
+    </div>
+    
+    <div class="three-column">
+        <div class="glass-card">
+            <h3><i class="fas fa-shield-alt"></i> Risk Analysis</h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin:10px 0;">Quantum VaR · CHSH Enhanced</p>
+            <button class="btn-primary" id="riskBtn" style="width:100%;"><i class="fas fa-chart-bar"></i> Calculate VaR</button>
+            <div id="riskResult" style="display:none;" class="result-box"></div>
+        </div>
+        
+        <div class="glass-card">
+            <h3><i class="fas fa-backward"></i> Backtest</h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin:10px 0;">5-Year Historical Simulation</p>
+            <button class="btn-primary" id="backtestBtn" style="width:100%;"><i class="fas fa-play"></i> Run Backtest</button>
+            <div id="backtestResult" style="display:none;" class="result-box"></div>
+        </div>
+        
+        <div class="glass-card">
+            <h3><i class="fas fa-atom"></i> Quantum Status</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:15px 0;">
+                <div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:12px; text-align:center;">
+                    <div style="font-size:24px; font-weight:800; color:var(--secondary);">2.76</div>
+                    <div style="font-size:10px; color:var(--text-secondary);">CHSH S</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:12px; text-align:center;">
+                    <div style="font-size:24px; font-weight:800; color:var(--success);">98.4%</div>
+                    <div style="font-size:10px; color:var(--text-secondary);">Correlation</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:12px; text-align:center;">
+                    <div style="font-size:18px; font-weight:800; color:var(--warning);">1.38x</div>
+                    <div style="font-size:10px; color:var(--text-secondary);">Quantum Factor</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:12px; text-align:center;">
+                    <div style="font-size:14px; font-weight:800; color:var(--primary);">IBM Kingston</div>
+                    <div style="font-size:10px; color:var(--text-secondary);">156-Qubit</div>
+                </div>
+            </div>
+            <div style="font-size:10px; color:var(--text-secondary); font-family:var(--font-mono);">
+                <i class="fas fa-check-circle" style="color:var(--success);"></i> Job: d8uhvl4bp3hs738628cg
+            </div>
+        </div>
+    </div>
+    
+    <div class="glass-card">
+        <h3><i class="fas fa-chart-line"></i> Quantum Alpha Chart</h3>
+        <div class="chart-container">
+            <canvas id="alphaChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="quantum-line">⚛️ CHSH S=2.76 · 38% above classical · SA 2026/05142</div>
+        <p>© 2026 Quantum Alpha Engine · Powered by MindTech Industries</p>
+        <div style="font-size:10px; margin-top:5px;">IBM Verified · 156-Qubit Kingston</div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // QUANTUM ALPHA ENGINE — FRONTEND
+    // ============================================================
+    
+    const BACKEND_URL = 'https://mindcell-quantum.onrender.com';
+    let alphaChart = null;
+    
+    async function fetchQuantumStatus() {
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/quantum/status`);
+            const data = await res.json();
+            document.getElementById('quantumFactor').innerText = (1 + (data.chsh_s - 2) / 2).toFixed(2);
+            document.getElementById('correlation').innerText = (data.correlation * 100).toFixed(1);
+        } catch(e) { console.error(e); }
+    }
+    
+    document.getElementById('selectAllBtn').addEventListener('click', () => {
+        const select = document.getElementById('stockSelect');
+        for (let option of select.options) {
+            option.selected = true;
+        }
+    });
+    
+    document.getElementById('runAlphaBtn').addEventListener('click', async () => {
+        const select = document.getElementById('stockSelect');
+        const stocks = Array.from(select.selectedOptions).map(opt => opt.value);
+        if (stocks.length === 0) { alert('Select at least one stock'); return; }
+        
+        const resultDiv = document.getElementById('alphaResult');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<div class="loading"></div> Calculating quantum alpha...';
+        
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/alpha`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ stock_list: stocks, lookback_days: 252, quantum_enhanced: true })
+            });
+            const data = await res.json();
+            
+            let html = `<div style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
+                ⚛️ CHSH S=2.76 · ${data.quantum_factor.toFixed(2)}x enhancement
+            </div>`;
+            
+            for (const [stock, alpha] of Object.entries(data.alphas)) {
+                const color = alpha > 0 ? 'var(--success)' : 'var(--danger)';
+                const sign = alpha > 0 ? '+' : '';
+                html += `<div class="result-item">
+                    <span>${stock}</span>
+                    <span style="color:${color}; font-weight:700;">${sign}${alpha.toFixed(2)}%</span>
+                </div>`;
+            }
+            
+            html += `<div style="margin-top:10px; font-size:10px; color:var(--text-secondary);">
+                Quantum-enhanced alpha · ${data.timestamp}
+            </div>`;
+            
+            resultDiv.innerHTML = html;
+            
+            // Update chart
+            updateAlphaChart(data.alphas);
+            
+        } catch(e) {
+            resultDiv.innerHTML = `<div style="color:var(--danger);">❌ Error: ${e.message}</div>`;
+        }
+    });
+    
+    document.getElementById('optimizeBtn').addEventListener('click', async () => {
+        const select = document.getElementById('stockSelect');
+        const stocks = Array.from(select.selectedOptions).map(opt => opt.value);
+        if (stocks.length === 0) { alert('Select at least one stock'); return; }
+        
+        const targetReturn = parseFloat(document.getElementById('targetReturn').value) / 100;
+        const riskFreeRate = parseFloat(document.getElementById('riskFreeRate').value) / 100;
+        
+        const resultDiv = document.getElementById('portfolioResult');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<div class="loading"></div> Optimizing portfolio...';
+        
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/portfolio/optimize`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    stocks, 
+                    target_return: targetReturn, 
+                    risk_free_rate: riskFreeRate,
+                    quantum_enhanced: true 
+                })
+            });
+            const data = await res.json();
+            
+            let html = `<div style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
+                ⚛️ Quantum Portfolio · Sharpe Ratio: ${data.sharpe_ratio}
+            </div>`;
+            
+            const sorted = Object.entries(data.weights).sort((a,b) => b[1] - a[1]);
+            for (const [stock, weight] of sorted) {
+                if (weight > 0.01) {
+                    html += `<div class="result-item">
+                        <span>${stock}</span>
+                        <span class="result-value">${(weight * 100).toFixed(1)}%</span>
+                    </div>`;
+                }
+            }
+            
+            html += `<div style="margin-top:10px; font-size:11px; color:var(--text-secondary);">
+                Expected Return: ${(data.expected_return * 100).toFixed(1)}% · Risk: ${(data.expected_risk * 100).toFixed(1)}%
+            </div>`;
+            
+            resultDiv.innerHTML = html;
+            
+        } catch(e) {
+            resultDiv.innerHTML = `<div style="color:var(--danger);">❌ Error: ${e.message}</div>`;
+        }
+    });
+    
+    document.getElementById('riskBtn').addEventListener('click', async () => {
+        // Simulate a portfolio
+        const select = document.getElementById('stockSelect');
+        const stocks = Array.from(select.selectedOptions).map(opt => opt.value);
+        if (stocks.length === 0) { alert('Select stocks first'); return; }
+        
+        const portfolio = {};
+        const weight = 1 / stocks.length;
+        stocks.forEach(s => portfolio[s] = weight);
+        
+        const resultDiv = document.getElementById('riskResult');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<div class="loading"></div> Calculating quantum VaR...';
+        
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/risk/var`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ portfolio, confidence: 0.95, horizon_days: 10 })
+            });
+            const data = await res.json();
+            
+            resultDiv.innerHTML = `
+                <div class="result-item"><span>VaR 95% (10-day)</span><span class="result-value" style="color:var(--danger);">${data.var_95.toFixed(2)}%</span></div>
+                <div class="result-item"><span>CVaR 95% (Expected Shortfall)</span><span class="result-value" style="color:var(--warning);">${data.cvar_95.toFixed(2)}%</span></div>
+                <div class="result-item"><span>Max Drawdown</span><span class="result-value" style="color:var(--danger);">${data.max_drawdown.toFixed(2)}%</span></div>
+                <div style="margin-top:8px; font-size:10px; color:var(--text-secondary);">
+                    ⚛️ CHSH S=2.76 · ${data.quantum_factor.toFixed(2)}x enhancement
+                </div>
+            `;
+            
+        } catch(e) {
+            resultDiv.innerHTML = `<div style="color:var(--danger);">❌ Error: ${e.message}</div>`;
+        }
+    });
+    
+    document.getElementById('backtestBtn').addEventListener('click', async () => {
+        const resultDiv = document.getElementById('backtestResult');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<div class="loading"></div> Running quantum backtest...';
+        
+        try {
+            const select = document.getElementById('stockSelect');
+            const stocks = Array.from(select.selectedOptions).map(opt => opt.value);
+            
+            const res = await fetch(`${BACKEND_URL}/api/backtest`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    stocks: stocks.length > 0 ? stocks : ['NPN', 'FSR', 'SBK'],
+                    start_date: '2021-01-01',
+                    end_date: '2026-01-01',
+                    quantum_enhanced: true 
+                })
+            });
+            const data = await res.json();
+            
+            resultDiv.innerHTML = `
+                <div class="result-item"><span>Total Return</span><span class="result-value" style="color:var(--success);">+${(data.total_return * 100).toFixed(1)}%</span></div>
+                <div class="result-item"><span>Sharpe Ratio</span><span class="result-value">${data.sharpe_ratio}</span></div>
+                <div class="result-item"><span>Max Drawdown</span><span class="result-value" style="color:var(--danger);">${(data.max_drawdown * 100).toFixed(1)}%</span></div>
+                <div class="result-item"><span>Win Rate</span><span class="result-value">${(data.win_rate * 100).toFixed(0)}%</span></div>
+                <div style="margin-top:8px; font-size:10px; color:var(--text-secondary);">
+                    ⚛️ CHSH S=2.76 · Quantum Enhanced
+                </div>
+            `;
+            
+        } catch(e) {
+            resultDiv.innerHTML = `<div style="color:var(--danger);">❌ Error: ${e.message}</div>`;
+        }
+    });
+    
+    function updateAlphaChart(alphas) {
+        const ctx = document.getElementById('alphaChart').getContext('2d');
+        const labels = Object.keys(alphas);
+        const values = Object.values(alphas);
+        const colors = values.map(v => v > 0 ? '#00FF88' : '#EF476F');
+        
+        if (alphaChart) { alphaChart.destroy(); }
+        
+        alphaChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Quantum Alpha (basis points)',
+                    data: values,
+                    backgroundColor: colors.map(c => c + '80'),
+                    borderColor: colors,
+                    borderWidth: 2,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#8A99B0' }
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#8A99B0' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#8A99B0' }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Initial load
+    fetchQuantumStatus();
+    
+    // Particles
+    particlesJS('particles-js', {
+        particles: {
+            number: { value: 55 },
+            color: { value: ["#00B4D8", "#00F5D4", "#8A2BE2"] },
+            shape: { type: "circle" },
+            opacity: { value: 0.25, random: true },
+            size: { value: 2.5, random: true },
+            line_linked: { enable: true, distance: 150, color: "#00B4D8", opacity: 0.08 },
+            move: { enable: true, speed: 0.7 }
+        }
+    });
+    
+    console.log('🚀 Quantum Alpha Engine · CHSH S=2.76');
+</script>
+</body>
+</html>
