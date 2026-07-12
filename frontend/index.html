@@ -2,584 +2,848 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Quantum Alpha Engine — MindTech</title>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Quantum Alpha Engine · MindTech Industries</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ============================================================
+           QUANTUM ALPHA ENGINE — FULL INTERACTIVE DASHBOARD
+           ============================================================ */
         
         :root {
             --primary: #00B4D8;
             --primary-dark: #0096C7;
+            --primary-glow: rgba(0, 180, 216, 0.4);
             --secondary: #00F5D4;
             --quantum: #8A2BE2;
+            --quantum-glow: rgba(138, 43, 226, 0.5);
             --success: #00FF88;
             --danger: #EF476F;
             --warning: #FFD166;
             --dark-bg: #05080F;
             --dark-card: #0A0F1A;
-            --glass-border: rgba(0,180,216,0.2);
+            --glass-border: rgba(0, 180, 216, 0.25);
             --text-primary: #E8EDF5;
             --text-secondary: #8A99B0;
             --font-exo: 'Exo 2', sans-serif;
             --font-mono: 'Space Mono', monospace;
         }
         
-        body { font-family: var(--font-exo); background: var(--dark-bg); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
-        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        .glass-card { background: rgba(15, 25, 45, 0.45); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 28px; padding: 24px; margin-bottom: 24px; transition: all 0.3s; }
-        .glass-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,180,216,0.15); }
+        body {
+            font-family: var(--font-exo);
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
         
-        .header { text-align: center; padding: 20px 0; }
-        .logo { max-width: 280px; width: 100%; filter: drop-shadow(0 0 20px #00B4D8); }
-        .tagline { font-size: 0.75rem; color: var(--secondary); letter-spacing: 3px; margin-top: 8px; font-family: var(--font-mono); }
-        .quantum-badge-header { display: inline-block; background: rgba(138,43,226,0.2); border: 1px solid var(--quantum); border-radius: 60px; padding: 8px 20px; font-size: 11px; font-family: var(--font-mono); color: var(--secondary); margin: 10px 0; }
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
         
-        .stats-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px; margin-bottom: 25px; }
-        .stat-card { background: rgba(15, 25, 45, 0.45); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 18px; text-align: center; }
-        .stat-value { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, var(--secondary), var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .stat-label { font-size: 0.65rem; color: var(--text-secondary); margin-top: 5px; font-family: var(--font-mono); }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
         
-        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-        .three-column { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+        .glass-card {
+            background: rgba(15, 25, 45, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
         
-        .btn-primary { background: linear-gradient(135deg, var(--quantum), var(--primary)); border: none; padding: 12px 24px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px var(--quantum-glow); }
-        .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 12px 24px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .btn-secondary:hover { background: rgba(0,180,216,0.1); border-color: var(--primary); }
-        .btn-danger { background: linear-gradient(135deg, var(--danger), #FF6B4A); border: none; padding: 12px 24px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; }
+        .glass-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 180, 216, 0.15);
+        }
         
-        select { width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: 12px; color: white; font-size: 14px; margin: 8px 0 16px; }
-        select option { background: var(--dark-card); }
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
         
-        .result-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 16px; margin-top: 15px; }
-        .result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: 13px; }
-        .result-value { font-weight: 600; color: var(--secondary); }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
         
-        .chart-container { height: 300px; margin-top: 15px; }
+        .logo-img {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 0 20px rgba(0, 180, 216, 0.3));
+            opacity: 0.92;
+            background: rgba(15, 25, 45, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 180, 216, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+        }
         
-        .footer { text-align: center; font-size: 0.7rem; color: var(--text-secondary); padding: 20px; border-top: 1px solid var(--glass-border); margin-top: 15px; font-family: var(--font-mono); }
-        .quantum-line { font-size: 0.7rem; margin-bottom: 8px; letter-spacing: 0.5px; color: var(--secondary); }
+        .logo-img:hover {
+            opacity: 1;
+            transform: scale(1.02);
+            border-color: var(--primary);
+        }
         
-        @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(3, 1fr); } .two-column { grid-template-columns: 1fr; } .three-column { grid-template-columns: 1fr; } }
-        @media (max-width: 600px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+        .brand-text h1 {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--quantum));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
         
-        .loading { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 0.6s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .brand-text p {
+            font-size: 10px;
+            color: var(--text-secondary);
+            letter-spacing: 3px;
+            font-family: var(--font-mono);
+        }
         
-        .status-indicator { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
-        .status-green { background: var(--success); }
-        .status-yellow { background: var(--warning); }
-        .status-red { background: var(--danger); }
+        .quantum-badge {
+            background: rgba(138, 43, 226, 0.15);
+            border: 1px solid var(--quantum);
+            border-radius: 60px;
+            padding: 8px 18px;
+            font-size: 10px;
+            font-family: var(--font-mono);
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 20px var(--quantum-glow);
+        }
+        
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(15, 25, 45, 0.45);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 18px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--secondary);
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-family: var(--font-mono);
+        }
+        
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 180, 216, 0.05), rgba(138, 43, 226, 0.05));
+            border: 1px solid var(--glass-border);
+            border-left: 3px solid var(--primary);
+            padding: 24px 32px;
+            margin-bottom: 35px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), transparent);
+            opacity: 0.6;
+        }
+        
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: var(--secondary);
+            margin-bottom: 4px;
+        }
+        
+        .hero-title {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+        
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--quantum));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 10px 0 0;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+        
+        .hero-desc strong {
+            color: var(--secondary);
+        }
+        
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            padding: 10px 22px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-exo);
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+            box-shadow: 0 8px 20px rgba(0, 180, 216, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(0, 180, 216, 0.15);
+            border: 1px solid var(--glass-border);
+            padding: 10px 22px;
+            border-radius: 60px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-exo);
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 180, 216, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .btn-quantum {
+            background: linear-gradient(135deg, var(--quantum), var(--primary));
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font-exo);
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-quantum:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--quantum-glow);
+        }
+        
+        .btn-quantum:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* ===== CARD ===== */
+        .card {
+            background: rgba(15, 25, 45, 0.45);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            border-color: var(--primary);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .card-title i {
+            color: var(--secondary);
+            margin-right: 8px;
+        }
+        
+        .result-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .result-box .label {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+        
+        .result-box .error {
+            color: var(--danger);
+        }
+        
+        .result-box .success {
+            color: var(--success);
+        }
+        
+        .spinner {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ===== ACTION ROW ===== */
+        .action-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        
+        /* ===== FOOTER ===== */
+        .footer {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 24px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .footer-left {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            line-height: 2;
+        }
+        
+        .footer-right {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            text-align: right;
+            line-height: 2;
+        }
+        
+        .footer-logos {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .footer-logos img {
+            height: 32px;
+            width: auto;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-logos img:hover {
+            opacity: 1;
+        }
+        
+        .footer-quantum {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--secondary);
+            letter-spacing: 1px;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; text-align: center; }
+            .logo-area { flex-direction: column; }
+            .logo-img { height: 60px; }
+            .hero-title { font-size: 28px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer { flex-direction: column; text-align: center; }
+            .footer-right { text-align: center; }
+            .action-row { justify-content: center; }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-img { height: 48px; padding: 4px 10px; }
+            .brand-text h1 { font-size: 20px; }
+            .hero-title { font-size: 22px; }
+            .stat-value { font-size: 22px; }
+            .btn-primary, .btn-secondary, .btn-quantum { font-size: 12px; padding: 8px 16px; }
+        }
     </style>
 </head>
 <body>
-<div id="particles-js"></div>
 
-<div class="container">
-    <div class="header">
-        <img src="https://i.postimg.cc/yYPDHtky/Luvuno-Quantum-Chat-image-removebg-preview.png" alt="Quantum Alpha Engine" class="logo">
-        <div class="tagline">⚛️ QUANTUM ALPHA ENGINE · CHSH S=2.76</div>
-        <div class="quantum-badge-header">⚛️ CHSH S=2.76 · 38% ABOVE CLASSICAL · IBM VERIFIED</div>
-    </div>
-    
-    <div class="stats-row" id="dashboardStats">
-        <div class="stat-card"><div class="stat-value" id="stocksCount">50</div><div class="stat-label">JSE Stocks</div></div>
-        <div class="stat-card"><div class="stat-value" id="quantumFactor">1.38</div><div class="stat-label">Quantum Factor</div></div>
-        <div class="stat-card"><div class="stat-value" id="sharpeRatio">2.1</div><div class="stat-label">Sharpe Ratio</div></div>
-        <div class="stat-card"><div class="stat-value" id="alphaAvg">+0.67</div><div class="stat-label">Avg Alpha (%)</div></div>
-        <div class="stat-card"><div class="stat-value" id="var95">-1.23</div><div class="stat-label">VaR 95% (%)</div></div>
-        <div class="stat-card"><div class="stat-value" id="correlation">98.4</div><div class="stat-label">Quantum Corr (%)</div></div>
-    </div>
-    
-    <div class="two-column">
-        <div class="glass-card">
-            <h3><i class="fas fa-brain"></i> Quantum Alpha Engine</h3>
-            <p style="font-size:12px; color:var(--text-secondary); margin:10px 0;">CHSH S=2.76 · MPS Tensor Network</p>
-            
-            <label style="font-size:12px; font-family:var(--font-mono);">Select Stocks</label>
-            <select id="stockSelect" multiple style="height:160px;">
-                <option value="NPN">Naspers (NPN)</option>
-                <option value="FSR">FirstRand (FSR)</option>
-                <option value="SBK">Standard Bank (SBK)</option>
-                <option value="AGL">Anglo American (AGL)</option>
-                <option value="BIL">BHP (BIL)</option>
-                <option value="MTN">MTN (MTN)</option>
-                <option value="VOD">Vodacom (VOD)</option>
-                <option value="CPI">Capitec (CPI)</option>
-                <option value="PPH">Pepkor (PPH)</option>
-                <option value="SNH">Steinhoff (SNH)</option>
-            </select>
-            
-            <div style="display:flex; gap:12px; margin:12px 0;">
-                <button class="btn-primary" id="runAlphaBtn" style="flex:1;"><i class="fas fa-chart-line"></i> Calculate Alpha</button>
-                <button class="btn-secondary" id="selectAllBtn">Select All</button>
-            </div>
-            
-            <div id="alphaResult" style="display:none;" class="result-box"></div>
-        </div>
-        
-        <div class="glass-card">
-            <h3><i class="fas fa-chart-pie"></i> Portfolio Optimizer</h3>
-            <p style="font-size:12px; color:var(--text-secondary); margin:10px 0;">MPS Tensor Network · Quantum Enhanced</p>
-            
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <div>
-                    <label style="font-size:11px; font-family:var(--font-mono);">Target Return (%)</label>
-                    <input type="number" id="targetReturn" value="12" step="0.5" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); border-radius:8px; color:white;">
-                </div>
-                <div>
-                    <label style="font-size:11px; font-family:var(--font-mono);">Risk-Free Rate (%)</label>
-                    <input type="number" id="riskFreeRate" value="6.5" step="0.1" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid var(--glass-border); border-radius:8px; color:white;">
-                </div>
-            </div>
-            
-            <button class="btn-primary" id="optimizeBtn" style="width:100%; margin-top:12px;"><i class="fas fa-chart-pie"></i> Optimize Portfolio</button>
-            
-            <div id="portfolioResult" style="display:none;" class="result-box"></div>
-        </div>
-    </div>
-    
-    <div class="three-column">
-        <div class="glass-card">
-            <h3><i class="fas fa-shield-alt"></i> Risk Analysis</h3>
-            <p style="font-size:12px; color:var(--text-secondary); margin:10px 0;">Quantum VaR · CHSH Enhanced</p>
-            <button class="btn-primary" id="riskBtn" style="width:100%;"><i class="fas fa-chart-bar"></i> Calculate VaR</button>
-            <div id="riskResult" style="display:none;" class="result-box"></div>
-        </div>
-        
-        <div class="glass-card">
-            <h3><i class="fas fa-backward"></i> Backtest</h3>
-            <p style="font-size:12px; color:var(--text-secondary); margin:10px 0;">5-Year Historical Simulation</p>
-            <button class="btn-primary" id="backtestBtn" style="width:100%;"><i class="fas fa-play"></i> Run Backtest</button>
-            <div id="backtestResult" style="display:none;" class="result-box"></div>
-        </div>
-        
-        <div class="glass-card">
-            <h3><i class="fas fa-atom"></i> Quantum Status</h3>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:15px 0;">
-                <div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:12px; text-align:center;">
-                    <div style="font-size:24px; font-weight:800; color:var(--secondary);">2.76</div>
-                    <div style="font-size:10px; color:var(--text-secondary);">CHSH S</div>
-                </div>
-                <div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:12px; text-align:center;">
-                    <div style="font-size:24px; font-weight:800; color:var(--success);">98.4%</div>
-                    <div style="font-size:10px; color:var(--text-secondary);">Correlation</div>
-                </div>
-                <div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:12px; text-align:center;">
-                    <div style="font-size:18px; font-weight:800; color:var(--warning);">1.38x</div>
-                    <div style="font-size:10px; color:var(--text-secondary);">Quantum Factor</div>
-                </div>
-                <div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:12px; text-align:center;">
-                    <div style="font-size:14px; font-weight:800; color:var(--primary);">IBM Kingston</div>
-                    <div style="font-size:10px; color:var(--text-secondary);">156-Qubit</div>
-                </div>
-            </div>
-            <div style="font-size:10px; color:var(--text-secondary); font-family:var(--font-mono);">
-                <i class="fas fa-check-circle" style="color:var(--success);"></i> Job: d8uhvl4bp3hs738628cg
-            </div>
-        </div>
-    </div>
-    
-    <div class="glass-card">
-        <h3><i class="fas fa-chart-line"></i> Quantum Alpha Chart</h3>
-        <div class="chart-container">
-            <canvas id="alphaChart"></canvas>
-        </div>
-    </div>
-    
-    <div class="footer">
-        <div class="quantum-line">⚛️ CHSH S=2.76 · 38% above classical · SA 2026/05142</div>
-        <p>© 2026 Quantum Alpha Engine · Powered by MindTech Industries</p>
-        <div style="font-size:10px; margin-top:5px;">IBM Verified · 156-Qubit Kingston</div>
-    </div>
-</div>
+    <div id="particles-js"></div>
 
-<script>
-    // ============================================================
-    // QUANTUM ALPHA ENGINE — FRONTEND (ROBUST)
-    // ============================================================
-    
-    const BACKEND_URL = 'https://quantum-alpha-engine.onrender.com';
-    let alphaChart = null;
-    
-    // ============================================================
-    // STOCKS
-    // ============================================================
-    const STOCKS = [
-        { symbol: "NPN", name: "Naspers", sector: "Media" },
-        { symbol: "FSR", name: "FirstRand", sector: "Banking" },
-        { symbol: "SBK", name: "Standard Bank", sector: "Banking" },
-        { symbol: "AGL", name: "Anglo American", sector: "Mining" },
-        { symbol: "BIL", name: "BHP", sector: "Mining" },
-        { symbol: "MTN", name: "MTN Group", sector: "Telecom" },
-        { symbol: "VOD", name: "Vodacom", sector: "Telecom" },
-        { symbol: "CPI", name: "Capitec", sector: "Banking" },
-        { symbol: "PPH", name: "Pepkor", sector: "Retail" },
-        { symbol: "SNH", name: "Steinhoff", sector: "Retail" }
-    ];
-    
-    // ============================================================
-    // DOM READY
-    // ============================================================
-    document.addEventListener('DOMContentLoaded', () => {
-        populateSelect();
-        fetchQuantumStatus();
-        setupEventListeners();
-    });
-    
-    // ============================================================
-    // POPULATE SELECT
-    // ============================================================
-    function populateSelect() {
-        const select = document.getElementById('stockSelect');
-        select.innerHTML = '';
-        STOCKS.forEach(s => {
-            const opt = document.createElement('option');
-            opt.value = s.symbol;
-            opt.textContent = `${s.name} (${s.symbol})`;
-            select.appendChild(opt);
-        });
-    }
-    
-    // ============================================================
-    // QUANTUM STATUS
-    // ============================================================
-    async function fetchQuantumStatus() {
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/quantum/status`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            const factor = (1 + (data.chsh_s - 2) / 2).toFixed(2);
-            document.getElementById('quantumFactor').innerText = factor;
-            document.getElementById('correlation').innerText = (data.correlation * 100).toFixed(1);
-        } catch (e) {
-            console.error('Quantum status error:', e);
-        }
-    }
-    
-    // ============================================================
-    // EVENT LISTENERS
-    // ============================================================
-    function setupEventListeners() {
-        document.getElementById('selectAllBtn').addEventListener('click', () => {
-            const select = document.getElementById('stockSelect');
-            for (let opt of select.options) opt.selected = true;
-        });
-        
-        document.getElementById('runAlphaBtn').addEventListener('click', runAlpha);
-        document.getElementById('optimizeBtn').addEventListener('click', runOptimize);
-        document.getElementById('riskBtn').addEventListener('click', runRisk);
-        document.getElementById('backtestBtn').addEventListener('click', runBacktest);
-    }
-    
-    // ============================================================
-    // GET SELECTED STOCKS
-    // ============================================================
-    function getSelectedStocks() {
-        const select = document.getElementById('stockSelect');
-        return Array.from(select.selectedOptions).map(opt => opt.value);
-    }
-    
-    // ============================================================
-    // RUN ALPHA
-    // ============================================================
-    async function runAlpha() {
-        const stocks = getSelectedStocks();
-        if (stocks.length === 0) {
-            showResult('alphaResult', '⚠️ Select at least one stock');
-            return;
-        }
-        
-        showLoading('alphaResult');
-        
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/alpha`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ stock_list: stocks, quantum_enhanced: true })
-            });
-            
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            
-            if (!data.alphas || Object.keys(data.alphas).length === 0) {
-                showResult('alphaResult', '⚠️ No alpha data returned');
-                return;
-            }
-            
-            let html = `<div style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
-                ⚛️ CHSH S=2.76 · ${(data.quantum_factor || 1.38).toFixed(2)}x enhancement
-            </div>`;
-            
-            let totalAlpha = 0;
-            let count = 0;
-            
-            for (const [stock, alpha] of Object.entries(data.alphas)) {
-                const numAlpha = parseFloat(alpha) || 0;
-                totalAlpha += numAlpha;
-                count++;
-                const color = numAlpha > 0 ? 'var(--success)' : 'var(--danger)';
-                const sign = numAlpha > 0 ? '+' : '';
-                html += `<div class="result-item">
-                    <span>${stock}</span>
-                    <span style="color:${color}; font-weight:700;">${sign}${numAlpha.toFixed(2)}%</span>
-                </div>`;
-            }
-            
-            const avgAlpha = count > 0 ? totalAlpha / count : 0;
-            document.getElementById('alphaAvg').innerText = (avgAlpha > 0 ? '+' : '') + avgAlpha.toFixed(2);
-            
-            html += `<div style="margin-top:10px; font-size:10px; color:var(--text-secondary);">
-                ${data.timestamp ? new Date(data.timestamp).toLocaleString() : ''}
-            </div>`;
-            
-            showResult('alphaResult', html);
-            updateAlphaChart(data.alphas);
-            
-        } catch (e) {
-            showResult('alphaResult', `❌ Error: ${e.message}`);
-        }
-    }
-    
-    // ============================================================
-    // RUN OPTIMIZE
-    // ============================================================
-    async function runOptimize() {
-        const stocks = getSelectedStocks();
-        if (stocks.length === 0) {
-            showResult('portfolioResult', '⚠️ Select at least one stock');
-            return;
-        }
-        
-        const targetReturn = parseFloat(document.getElementById('targetReturn').value) || 12;
-        const riskFreeRate = parseFloat(document.getElementById('riskFreeRate').value) || 6.5;
-        
-        showLoading('portfolioResult');
-        
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/portfolio/optimize`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    stocks,
-                    target_return: targetReturn / 100,
-                    risk_free_rate: riskFreeRate / 100,
-                    quantum_enhanced: true
-                })
-            });
-            
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            
-            if (!data.weights || Object.keys(data.weights).length === 0) {
-                showResult('portfolioResult', '⚠️ No portfolio data returned');
-                return;
-            }
-            
-            let html = `<div style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">
-                ⚛️ Quantum Portfolio · Sharpe Ratio: ${(data.sharpe_ratio || 0).toFixed(2)}
-            </div>`;
-            
-            const sorted = Object.entries(data.weights).sort((a, b) => b[1] - a[1]);
-            for (const [stock, weight] of sorted) {
-                if (weight > 0.005) {
-                    html += `<div class="result-item">
-                        <span>${stock}</span>
-                        <span class="result-value">${(weight * 100).toFixed(1)}%</span>
-                    </div>`;
-                }
-            }
-            
-            const expReturn = data.expected_return || 0;
-            const expRisk = data.expected_risk || 0;
-            html += `<div style="margin-top:10px; font-size:11px; color:var(--text-secondary);">
-                Expected Return: ${(expReturn * 100).toFixed(1)}% · Risk: ${(expRisk * 100).toFixed(1)}%
-            </div>`;
-            
-            document.getElementById('sharpeRatio').innerText = (data.sharpe_ratio || 0).toFixed(2);
-            
-            showResult('portfolioResult', html);
-            
-        } catch (e) {
-            showResult('portfolioResult', `❌ Error: ${e.message}`);
-        }
-    }
-    
-    // ============================================================
-    // RUN RISK
-    // ============================================================
-    async function runRisk() {
-        const stocks = getSelectedStocks();
-        if (stocks.length === 0) {
-            showResult('riskResult', '⚠️ Select at least one stock');
-            return;
-        }
-        
-        const portfolio = {};
-        const weight = 1 / stocks.length;
-        stocks.forEach(s => portfolio[s] = weight);
-        
-        showLoading('riskResult');
-        
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/risk/var`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ portfolio, confidence: 0.95, horizon_days: 10 })
-            });
-            
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            
-            const var95 = data.var_95 || 0;
-            const cvar95 = data.cvar_95 || 0;
-            const drawdown = data.max_drawdown || 0;
-            const factor = data.quantum_factor || 1.38;
-            
-            document.getElementById('var95').innerText = var95.toFixed(2);
-            
-            let html = `
-                <div class="result-item"><span>VaR 95% (10-day)</span><span class="result-value" style="color:var(--danger);">${var95.toFixed(2)}%</span></div>
-                <div class="result-item"><span>CVaR 95% (Expected Shortfall)</span><span class="result-value" style="color:var(--warning);">${cvar95.toFixed(2)}%</span></div>
-                <div class="result-item"><span>Max Drawdown</span><span class="result-value" style="color:var(--danger);">${drawdown.toFixed(2)}%</span></div>
-                <div style="margin-top:8px; font-size:10px; color:var(--text-secondary);">
-                    ⚛️ CHSH S=2.76 · ${factor.toFixed(2)}x enhancement
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <div class="logo-area">
+                <img src="https://i.postimg.cc/sxBJ9S19/Quantum-Alpha-logo-(1).png" alt="Quantum Alpha Engine" class="logo-img" onerror="this.src='https://placehold.co/80x80/00B4D8/white?text=QAE'">
+                <div class="brand-text">
+                    <h1>Quantum Alpha Engine</h1>
+                    <p>CHSH S=2.76 · IBM Verified · African Quantum AI</p>
                 </div>
-            `;
-            
-            showResult('riskResult', html);
-            
-        } catch (e) {
-            showResult('riskResult', `❌ Error: ${e.message}`);
-        }
-    }
-    
-    // ============================================================
-    // RUN BACKTEST
-    // ============================================================
-    async function runBacktest() {
-        const stocks = getSelectedStocks();
-        if (stocks.length === 0) {
-            showResult('backtestResult', '⚠️ Select at least one stock');
-            return;
-        }
-        
-        showLoading('backtestResult');
-        
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/backtest`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ stocks, quantum_enhanced: true })
-            });
-            
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            
-            const totalReturn = data.total_return || 0;
-            const sharpe = data.sharpe_ratio || 0;
-            const drawdown = data.max_drawdown || 0;
-            const winRate = data.win_rate || 0;
-            
-            let html = `
-                <div class="result-item"><span>Total Return</span><span class="result-value" style="color:${totalReturn > 0 ? 'var(--success)' : 'var(--danger)'};">${(totalReturn * 100).toFixed(1)}%</span></div>
-                <div class="result-item"><span>Sharpe Ratio</span><span class="result-value">${sharpe.toFixed(2)}</span></div>
-                <div class="result-item"><span>Max Drawdown</span><span class="result-value" style="color:var(--danger);">${(drawdown * 100).toFixed(1)}%</span></div>
-                <div class="result-item"><span>Win Rate</span><span class="result-value">${(winRate * 100).toFixed(0)}%</span></div>
-                <div style="margin-top:8px; font-size:10px; color:var(--text-secondary);">
-                    ⚛️ CHSH S=2.76 · Quantum Enhanced
+            </div>
+            <div class="quantum-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span id="badgeText">CHSH S=2.76 · 98.4% · SA 2026/05142</span>
+            </div>
+        </header>
+
+        <!-- ===== STATS ===== -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="statChsh">2.76</div>
+                <div class="stat-label">CHSH S · Bell Violation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statCorr">98.4%</div>
+                <div class="stat-label">Quantum Correlation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statViolation">38%</div>
+                <div class="stat-label">Above Classical Limit</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statQubits">156</div>
+                <div class="stat-label">IBM Qubits · Kingston</div>
+            </div>
+        </div>
+
+        <!-- ===== HERO ===== -->
+        <section class="hero">
+            <div class="hero-eyebrow">⚛️ QUANTUM ALPHA ENGINE · IBM-VERIFIED</div>
+            <h1 class="hero-title">
+                <span>Quantum AI</span> Training · 1/10th the Cost
+            </h1>
+            <p class="hero-desc">
+                <strong>CHSH S=2.76 · 38% above classical</strong><br>
+                Train AI models on quantum hardware at <strong>1/10th the cost</strong> of GPU data centers.
+                IBM-verified · Patent-protected · Built in Africa.
+            </p>
+            <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;">
+                <button class="btn-quantum" onclick="fetchQuantumStatus()">
+                    <i class="fas fa-atom"></i> Quantum Status
+                </button>
+                <button class="btn-primary" onclick="fetchStocks()">
+                    <i class="fas fa-chart-simple"></i> JSE Stocks
+                </button>
+                <button class="btn-secondary" onclick="fetchHealth()">
+                    <i class="fas fa-heartbeat"></i> Health
+                </button>
+            </div>
+            <div id="heroResult" class="result-box" style="margin-top:16px;display:none;">
+                <span class="label">Response:</span>
+                <span id="heroResponse">—</span>
+            </div>
+        </section>
+
+        <!-- ===== QUANTUM ALPHA ===== -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title"><i class="fas fa-cube"></i> Quantum Alpha Calculation</span>
+                <span style="font-size:10px;color:var(--text-secondary);font-family:var(--font-mono);">CHSH S=2.76 · MPS Tensor Network</span>
+            </div>
+            <div class="action-row">
+                <button class="btn-primary" onclick="calculateAlpha()">
+                    <i class="fas fa-calculator"></i> Calculate Alpha
+                </button>
+                <button class="btn-secondary" onclick="optimizePortfolio()">
+                    <i class="fas fa-chart-pie"></i> Optimize Portfolio
+                </button>
+                <button class="btn-secondary" onclick="calculateRisk()">
+                    <i class="fas fa-shield-alt"></i> Risk Analysis
+                </button>
+                <button class="btn-quantum" onclick="trainQuantum()">
+                    <i class="fas fa-brain"></i> Train Quantum AI
+                </button>
+            </div>
+            <div id="alphaResult" class="result-box">
+                <span class="label">Ready:</span> Click a button to run a quantum calculation.
+            </div>
+        </div>
+
+        <!-- ===== RESULTS HISTORY ===== -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title"><i class="fas fa-list"></i> Activity Log</span>
+                <span style="font-size:10px;color:var(--text-secondary);font-family:var(--font-mono);">Live</span>
+            </div>
+            <div id="activityLog" class="result-box" style="max-height:150px;">
+                <span class="label">⚛️ Quantum Alpha Engine · Online</span><br>
+                <span style="color:var(--text-secondary);font-size:11px;">CHSH S=2.76 · 38% above classical · Ready</span>
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="footer">
+            <div class="footer-left">
+                <div class="footer-logos">
+                    <img src="https://i.postimg.cc/zXW78GNH/Mind-Tech-Transparent-Logo.png" alt="MindTech" onerror="this.style.display='none'">
+                    <img src="https://i.postimg.cc/RFQfK9k5/os-finallogo-removebg-preview.png" alt="MQOS" onerror="this.style.display='none'">
+                    <img src="https://i.postimg.cc/mgvTRnQZ/Gemini-Generated-Image-19nuyd19nuyd19nu.png" alt="Quantum" onerror="this.style.display='none'">
+                    <span class="footer-quantum">⚛️ QUANTUM AI</span>
                 </div>
-            `;
-            
-            showResult('backtestResult', html);
-            
-        } catch (e) {
-            showResult('backtestResult', `❌ Error: ${e.message}`);
-        }
-    }
-    
-    // ============================================================
-    // UI HELPERS
-    // ============================================================
-    function showLoading(id) {
-        const el = document.getElementById(id);
-        el.style.display = 'block';
-        el.innerHTML = '<div class="loading"></div> Processing...';
-    }
-    
-    function showResult(id, html) {
-        const el = document.getElementById(id);
-        el.style.display = 'block';
-        el.innerHTML = html;
-    }
-    
-    function updateAlphaChart(alphas) {
-        const ctx = document.getElementById('alphaChart').getContext('2d');
-        const labels = Object.keys(alphas);
-        const values = Object.values(alphas).map(v => parseFloat(v) || 0);
-        const colors = values.map(v => v > 0 ? '#00FF88' : '#EF476F');
-        
-        if (alphaChart) alphaChart.destroy();
-        
-        alphaChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Quantum Alpha (basis points)',
-                    data: values,
-                    backgroundColor: colors.map(c => c + '80'),
-                    borderColor: colors,
-                    borderWidth: 2,
-                    borderRadius: 4
-                }]
+                <span style="display:block;margin-top:4px;">© 2026 Quantum Alpha Engine · Powered by MindTech Industries</span>
+            </div>
+            <div class="footer-right">
+                <div class="footer-quantum">
+                    CHSH S=2.76 · 98.4% · SA 2026/05142<br>
+                    IBM Job: d8uhvl4bp3hs738628cg
+                </div>
+                <span style="display:block;margin-top:4px;font-size:8px;color:var(--text-secondary);">
+                    ENSafrica Pro Bono · African Quantum AI
+                </span>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // ============================================================
+        // QUANTUM ALPHA ENGINE — FULL INTERACTIVE DASHBOARD
+        // ============================================================
+
+        const API_BASE = 'https://quantum-alpha-engine.onrender.com';
+
+        // ===== PARTICLES =====
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 55, density: { enable: true, value_area: 1000 } },
+                color: { value: ['#00B4D8', '#00F5D4', '#8A2BE2'] },
+                shape: { type: 'circle' },
+                opacity: { value: 0.25, random: true },
+                size: { value: 2.5, random: true },
+                line_linked: { enable: true, distance: 150, color: '#00B4D8', opacity: 0.08, width: 0.8 },
+                move: { enable: true, speed: 0.7, direction: 'none', random: true }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: { color: '#8A99B0' }
-                    }
-                },
-                scales: {
-                    y: {
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#8A99B0' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#8A99B0' }
-                    }
-                }
+            interactivity: {
+                events: { onhover: { enable: true, mode: 'repulse' } }
             }
         });
-    }
-    
-    // ============================================================
-    // PARTICLES
-    // ============================================================
-    particlesJS('particles-js', {
-        particles: {
-            number: { value: 55 },
-            color: { value: ["#00B4D8", "#00F5D4", "#8A2BE2"] },
-            shape: { type: "circle" },
-            opacity: { value: 0.25, random: true },
-            size: { value: 2.5, random: true },
-            line_linked: { enable: true, distance: 150, color: "#00B4D8", opacity: 0.08 },
-            move: { enable: true, speed: 0.7 }
+
+        // ===== LOGGING =====
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('activityLog');
+            const time = new Date().toLocaleTimeString();
+            const colors = {
+                info: 'var(--text-secondary)',
+                success: 'var(--success)',
+                error: 'var(--danger)',
+                quantum: 'var(--secondary)'
+            };
+            const color = colors[type] || colors.info;
+            logEl.innerHTML += `<br><span style="color:${color};font-size:11px;">[${time}] ${message}</span>`;
+            logEl.scrollTop = logEl.scrollHeight;
         }
-    });
-    
-    console.log('🚀 Quantum Alpha Engine · CHSH S=2.76');
-</script>
+
+        function showResult(elementId, content, isError = false) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.innerHTML = isError
+                ? `<span class="error">❌ ${content}</span>`
+                : `<span class="success">✅ ${content}</span>`;
+        }
+
+        function showHeroResult(content) {
+            const el = document.getElementById('heroResult');
+            const resp = document.getElementById('heroResponse');
+            el.style.display = 'block';
+            resp.textContent = typeof content === 'object' ? JSON.stringify(content, null, 2) : content;
+        }
+
+        function setLoading(buttonId, isLoading) {
+            const btn = document.getElementById(buttonId);
+            if (!btn) return;
+            if (isLoading) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner spinner"></i> Loading...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = btn.dataset.original || btn.innerHTML;
+            }
+        }
+
+        function storeOriginalText(buttonId) {
+            const btn = document.getElementById(buttonId);
+            if (btn && !btn.dataset.original) {
+                btn.dataset.original = btn.innerHTML;
+            }
+        }
+
+        // ===== API CALLS =====
+
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const options = {
+                method,
+                headers: { 'Content-Type': 'application/json' }
+            };
+            if (body) options.body = JSON.stringify(body);
+
+            const response = await fetch(`${API_BASE}${endpoint}`, options);
+            const data = await response.json();
+            return data;
+        }
+
+        // ===== FETCH QUANTUM STATUS =====
+        async function fetchQuantumStatus() {
+            log('⚛️ Fetching quantum status...', 'quantum');
+            try {
+                const data = await apiCall('/api/quantum/status');
+                document.getElementById('statChsh').textContent = data.chsh_s;
+                document.getElementById('statCorr').textContent = (data.correlation * 100).toFixed(1) + '%';
+                document.getElementById('statViolation').textContent = data.percent_above_classical + '%';
+                document.getElementById('badgeText').textContent =
+                    `CHSH S=${data.chsh_s} · ${(data.correlation * 100).toFixed(1)}% · ${data.patent}`;
+                showHeroResult(data);
+                log('✅ Quantum status fetched successfully', 'success');
+            } catch (e) {
+                log('❌ Failed to fetch quantum status: ' + e.message, 'error');
+                showHeroResult('Error: ' + e.message, true);
+            }
+        }
+
+        // ===== FETCH STOCKS =====
+        async function fetchStocks() {
+            log('📊 Fetching JSE stocks...', 'info');
+            try {
+                const data = await apiCall('/api/market/stocks');
+                const names = data.map(s => `${s.symbol} (${s.sector})`).join('\n');
+                showHeroResult(data);
+                log(`✅ Loaded ${data.length} JSE stocks`, 'success');
+            } catch (e) {
+                log('❌ Failed to fetch stocks: ' + e.message, 'error');
+                showHeroResult('Error: ' + e.message, true);
+            }
+        }
+
+        // ===== FETCH HEALTH =====
+        async function fetchHealth() {
+            log('❤️ Checking health...', 'info');
+            try {
+                const data = await apiCall('/health');
+                showHeroResult(data);
+                log('✅ Health check passed', 'success');
+            } catch (e) {
+                log('❌ Health check failed: ' + e.message, 'error');
+                showHeroResult('Error: ' + e.message, true);
+            }
+        }
+
+        // ===== CALCULATE ALPHA =====
+        async function calculateAlpha() {
+            const btnId = 'alphaBtn';
+            storeOriginalText(btnId);
+            setLoading(btnId, true);
+            log('📈 Calculating quantum alpha...', 'quantum');
+            try {
+                const data = await apiCall('/api/alpha', 'POST', {
+                    stock_list: ['NPN', 'FSR', 'SBK', 'AGL', 'MTN'],
+                    lookback_days: 252,
+                    quantum_enhanced: true
+                });
+                const alphas = Object.entries(data.alphas)
+                    .map(([k, v]) => `${k}: ${v}%`).join(' | ');
+                showResult('alphaResult', `Quantum Alpha: ${alphas} | Factor: ${data.quantum_factor}x | CHSH: ${data.chsh_score}`);
+                log(`✅ Alpha calculated: ${alphas}`, 'success');
+            } catch (e) {
+                showResult('alphaResult', 'Error: ' + e.message, true);
+                log('❌ Alpha calculation failed: ' + e.message, 'error');
+            }
+            setLoading(btnId, false);
+        }
+
+        // ===== OPTIMIZE PORTFOLIO =====
+        async function optimizePortfolio() {
+            const btnId = 'optimizeBtn';
+            storeOriginalText(btnId);
+            setLoading(btnId, true);
+            log('📊 Optimizing portfolio...', 'quantum');
+            try {
+                const data = await apiCall('/api/portfolio/optimize', 'POST', {
+                    stocks: ['NPN', 'FSR', 'SBK', 'AGL', 'MTN', 'CPI'],
+                    target_return: 0.12,
+                    quantum_enhanced: true
+                });
+                const weights = Object.entries(data.weights)
+                    .map(([k, v]) => `${k}: ${(v*100).toFixed(1)}%`).join(' | ');
+                showResult('alphaResult',
+                    `Portfolio: ${weights} | Sharpe: ${data.sharpe_ratio} | Factor: ${data.quantum_factor}x`);
+                log(`✅ Portfolio optimized: Sharpe ${data.sharpe_ratio}`, 'success');
+            } catch (e) {
+                showResult('alphaResult', 'Error: ' + e.message, true);
+                log('❌ Portfolio optimization failed: ' + e.message, 'error');
+            }
+            setLoading(btnId, false);
+        }
+
+        // ===== CALCULATE RISK =====
+        async function calculateRisk() {
+            const btnId = 'riskBtn';
+            storeOriginalText(btnId);
+            setLoading(btnId, true);
+            log('🛡️ Calculating quantum risk...', 'quantum');
+            try {
+                const data = await apiCall('/api/risk/var', 'POST', {
+                    portfolio: { "NPN": 0.3, "FSR": 0.25, "SBK": 0.2, "AGL": 0.15, "MTN": 0.1 },
+                    confidence_level: 0.95,
+                    horizon_days: 10
+                });
+                showResult('alphaResult',
+                    `VaR 95%: ${data.var_95}% | CVaR: ${data.cvar_95}% | Max DD: ${data.max_drawdown}% | Factor: ${data.quantum_factor}x`);
+                log(`✅ Risk calculated: VaR ${data.var_95}%`, 'success');
+            } catch (e) {
+                showResult('alphaResult', 'Error: ' + e.message, true);
+                log('❌ Risk calculation failed: ' + e.message, 'error');
+            }
+            setLoading(btnId, false);
+        }
+
+        // ===== TRAIN QUANTUM AI =====
+        async function trainQuantum() {
+            const btnId = 'trainBtn';
+            storeOriginalText(btnId);
+            setLoading(btnId, true);
+            log('🧠 Training quantum AI on MNIST...', 'quantum');
+            try {
+                const data = await apiCall('/api/train/quantum', 'POST', {
+                    epochs: 3,
+                    n_samples: 50,
+                    shots: 1024,
+                    use_real_hardware: false
+                });
+                showResult('alphaResult',
+                    `✅ Accuracy: ${(data.accuracy * 100).toFixed(1)}% | Quantum Cost: $${data.quantum_cost_usd} | Classical Cost: $${data.classical_cost_usd} | Factor: ${data.quantum_factor}x`);
+                log(`✅ Quantum AI trained: Accuracy ${(data.accuracy * 100).toFixed(1)}%`, 'success');
+                log(`💰 Quantum cost $${data.quantum_cost_usd} vs Classical $${data.classical_cost_usd} — ${data.quantum_factor}x cheaper`, 'quantum');
+            } catch (e) {
+                showResult('alphaResult', 'Error: ' + e.message, true);
+                log('❌ Quantum training failed: ' + e.message, 'error');
+            }
+            setLoading(btnId, false);
+        }
+
+        // ===== SETUP BUTTONS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Store original button text
+            document.querySelectorAll('.btn-primary, .btn-secondary, .btn-quantum').forEach(btn => {
+                if (!btn.dataset.original) {
+                    btn.dataset.original = btn.innerHTML;
+                }
+            });
+
+            // Auto-fetch quantum status on load
+            setTimeout(fetchQuantumStatus, 500);
+            log('⚛️ Quantum Alpha Engine · Online', 'quantum');
+            log('📡 Connected to: ' + API_BASE, 'info');
+            log('💡 Click any button to run a quantum calculation', 'info');
+        });
+
+        console.log('⚛️ Quantum Alpha Engine · Interactive Dashboard');
+        console.log('   CHSH S=2.76 · 38% above classical');
+        console.log('   Patent: SA 2026/05142');
+        console.log('   IBM Job: d8uhvl4bp3hs738628cg');
+        console.log('   API: ' + API_BASE);
+    </script>
 </body>
 </html>
