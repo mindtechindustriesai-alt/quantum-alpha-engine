@@ -11,6 +11,8 @@ Serves:
 
 import os
 import json
+import sys
+import traceback
 import numpy as np
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional
@@ -19,6 +21,30 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
+
+# ============================================================
+# DEBUG — PRINT STARTUP INFO
+# ============================================================
+print("=" * 60)
+print("🔧 QUANTUM ALPHA ENGINE — STARTING UP")
+print(f"   Python version: {sys.version}")
+print(f"   Working directory: {os.getcwd()}")
+print("=" * 60)
+
+# Try to import quantum_mnist at startup to catch errors early
+try:
+    from .quantum_mnist import train_quantum_model
+    print("✅ quantum_mnist imported successfully at startup")
+    print(f"   train_quantum_model function: {train_quantum_model}")
+except ImportError as e:
+    print(f"❌ quantum_mnist ImportError at startup: {e}")
+    print("   This may be due to missing dependencies or incorrect file path.")
+    train_quantum_model = None
+except Exception as e:
+    print(f"❌ quantum_mnist error at startup: {e}")
+    train_quantum_model = None
+
+print("=" * 60)
 
 # ============================================================
 # QUANTUM BADGE
@@ -268,9 +294,7 @@ async def run_backtest(request: Request):
         raise HTTPException(status_code=500, detail=str(e))
 
 # ============================================================
-# ============================================================
-# QUANTUM AI TRAINING ENDPOINT (NEW)
-# ============================================================
+# QUANTUM AI TRAINING ENDPOINT (FULL DEBUG VERSION)
 # ============================================================
 
 @app.post("/api/train/quantum")
@@ -281,11 +305,60 @@ async def train_quantum(request: TrainRequest):
     
     Shows quantum training at 1/10th the cost of GPU data centers.
     """
+    print("=" * 60)
+    print(f"🧠 /api/train/quantum called at {datetime.now().isoformat()}")
+    print(f"   Request parameters: n_samples={request.n_samples}, epochs={request.epochs}, shots={request.shots}")
+    print(f"   use_real_hardware={request.use_real_hardware}")
+    print("=" * 60)
+    
+    # Step 1: Check if quantum_mnist is available
     try:
-        # Import the training module
         from .quantum_mnist import train_quantum_model
-        
-        # Run training
+        print("✅ quantum_mnist imported successfully inside endpoint")
+    except ImportError as e:
+        print(f"❌ ImportError in endpoint: {e}")
+        traceback.print_exc()
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "unavailable",
+                "error": "ImportError",
+                "message": f"quantum_mnist module not found: {str(e)}",
+                "chsh_score": QUANTUM_BADGE["chsh_s"],
+                "patent": QUANTUM_BADGE["patent"]
+            }
+        )
+    except Exception as e:
+        print(f"❌ Unexpected error importing quantum_mnist: {e}")
+        traceback.print_exc()
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "unavailable",
+                "error": str(type(e).__name__),
+                "message": f"Error loading quantum_mnist: {str(e)}",
+                "chsh_score": QUANTUM_BADGE["chsh_s"],
+                "patent": QUANTUM_BADGE["patent"]
+            }
+        )
+    
+    # Step 2: Check if the function exists
+    if train_quantum_model is None:
+        print("❌ train_quantum_model is None")
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "unavailable",
+                "error": "FunctionNotFound",
+                "message": "train_quantum_model function is not available",
+                "chsh_score": QUANTUM_BADGE["chsh_s"],
+                "patent": QUANTUM_BADGE["patent"]
+            }
+        )
+    
+    # Step 3: Try to run the training
+    try:
+        print("🚀 Starting quantum training...")
         result = train_quantum_model(
             n_samples=request.n_samples,
             epochs=request.epochs,
@@ -294,6 +367,10 @@ async def train_quantum(request: TrainRequest):
             token=request.token or os.getenv("IBM_QUANTUM_TOKEN"),
             crn=request.crn or os.getenv("IBM_QUANTUM_CRN")
         )
+        print(f"✅ Training completed successfully")
+        print(f"   Accuracy: {result.get('accuracy', 'unknown')}")
+        print(f"   Quantum cost: ${result.get('quantum_cost_usd', 'unknown')}")
+        print("=" * 60)
         
         # Add quantum badge to response
         result["chsh_score"] = QUANTUM_BADGE["chsh_s"]
@@ -303,18 +380,32 @@ async def train_quantum(request: TrainRequest):
         return result
         
     except ImportError as e:
-        # Fallback: qiskit not installed or quantum_mnist missing
+        print(f"❌ ImportError during training: {e}")
+        traceback.print_exc()
         return JSONResponse(
             status_code=503,
             content={
                 "status": "unavailable",
-                "message": "Quantum training module not available. Install qiskit and qiskit-machine-learning.",
+                "error": "ImportError",
+                "message": f"Missing dependency during training: {str(e)}",
                 "chsh_score": QUANTUM_BADGE["chsh_s"],
                 "patent": QUANTUM_BADGE["patent"]
             }
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"❌ Training failed with exception: {e}")
+        traceback.print_exc()
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "unavailable",
+                "error": str(type(e).__name__),
+                "message": f"Training failed: {str(e)}",
+                "traceback": traceback.format_exc()[:500],
+                "chsh_score": QUANTUM_BADGE["chsh_s"],
+                "patent": QUANTUM_BADGE["patent"]
+            }
+        )
 
 # ============================================================
 # RUN
@@ -322,4 +413,5 @@ async def train_quantum(request: TrainRequest):
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
+    print(f"🚀 Starting Quantum Alpha Engine on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
