@@ -10,8 +10,8 @@ Serves:
 """
 
 import os
-import json
 import sys
+import json
 import traceback
 import numpy as np
 from datetime import datetime, timedelta
@@ -23,17 +23,23 @@ from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
 # ============================================================
+# FIX: Add current directory to path for imports
+# ============================================================
+sys.path.append(os.path.dirname(__file__))
+
+# ============================================================
 # DEBUG — PRINT STARTUP INFO
 # ============================================================
 print("=" * 60)
 print("🔧 QUANTUM ALPHA ENGINE — STARTING UP")
 print(f"   Python version: {sys.version}")
 print(f"   Working directory: {os.getcwd()}")
+print(f"   Files in directory: {os.listdir('.')}")
 print("=" * 60)
 
 # Try to import quantum_mnist at startup to catch errors early
 try:
-    from .quantum_mnist import train_quantum_model
+    from quantum_mnist import train_quantum_model
     print("✅ quantum_mnist imported successfully at startup")
     print(f"   train_quantum_model function: {train_quantum_model}")
 except ImportError as e:
@@ -313,7 +319,7 @@ async def train_quantum(request: TrainRequest):
     
     # Step 1: Check if quantum_mnist is available
     try:
-        from .quantum_mnist import train_quantum_model
+        from quantum_mnist import train_quantum_model
         print("✅ quantum_mnist imported successfully inside endpoint")
     except ImportError as e:
         print(f"❌ ImportError in endpoint: {e}")
