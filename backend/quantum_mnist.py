@@ -99,7 +99,7 @@ class HybridQuantumModel(nn.Module):
         x = x.reshape(-1, 4)
         x = self.quantum(x)
         x = self.output(x)
-        # Explicitly keep shape [batch_size, 1] for BCEWithLogitsLoss
+        # Return shape: [batch_size, 1] — explicit for BCEWithLogitsLoss
         return x
 
 def load_mnist_data(n_samples=100):
@@ -150,7 +150,7 @@ def train_quantum_model(
     # Build model
     model = HybridQuantumModel(n_qubits=4, shots=shots)
     
-    # Use BCEWithLogitsLoss with reduction='mean'
+    # BCEWithLogitsLoss with reduction='mean'
     criterion = nn.BCEWithLogitsLoss(reduction='mean')
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     
