@@ -99,7 +99,7 @@ class HybridQuantumModel(nn.Module):
         x = x.reshape(-1, 4)
         x = self.quantum(x)
         x = self.output(x)
-        # Return shape: [batch_size, 1] — explicit for BCEWithLogitsLoss
+        # Ensure output shape is [batch_size, 1]
         return x
 
 def load_mnist_data(n_samples=100):
@@ -165,9 +165,19 @@ def train_quantum_model(
         for i, (data, target) in enumerate(train_loader):
             costs["classical_ops"] += 28 * 28
             optimizer.zero_grad()
+            
+            # Forward pass
             output = model(data)
+            
             # Ensure target has same shape as output: [batch_size, 1]
             target = target.float().reshape(-1, 1)
+            
+            # Ensure output also has shape [batch_size, 1] (it should already)
+            # But if it has shape [batch_size], unsqueeze it
+            if output.dim() == 1:
+                output = output.unsqueeze(1)
+            
+            # Calculate loss
             loss = criterion(output, target)
             loss.backward()
             optimizer.step()
@@ -189,6 +199,8 @@ def train_quantum_model(
         for data, target in test_loader:
             output = model(data)
             target = target.float().reshape(-1, 1)
+            if output.dim() == 1:
+                output = output.unsqueeze(1)
             predicted = torch.round(torch.sigmoid(output))
             test_correct += (predicted == target).sum().item()
             test_total += target.size(0)
