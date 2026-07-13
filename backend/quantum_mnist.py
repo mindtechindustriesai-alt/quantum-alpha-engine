@@ -99,7 +99,7 @@ class HybridQuantumModel(nn.Module):
         x = x.reshape(-1, 4)
         x = self.quantum(x)
         x = self.output(x)
-        # Return shape: [batch_size, 1] — explicit for BCEWithLogitsLoss
+        # Return shape: [batch_size, 1] for BCEWithLogitsLoss
         return x
 
 def load_mnist_data(n_samples=100):
