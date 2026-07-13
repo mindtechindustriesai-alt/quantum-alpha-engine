@@ -99,8 +99,7 @@ class HybridQuantumModel(nn.Module):
         x = x.reshape(-1, 4)
         x = self.quantum(x)
         x = self.output(x)
-        # Return shape: [batch_size, 1] for BCEWithLogitsLoss
-        return x
+        return x  # Shape: [batch_size, 1]
 
 def load_mnist_data(n_samples=100):
     """Load MNIST digits 0 and 1 for binary classification"""
@@ -166,7 +165,6 @@ def train_quantum_model(
             costs["classical_ops"] += 28 * 28
             optimizer.zero_grad()
             output = model(data)
-            # Ensure target has same shape as output: [batch_size, 1]
             target = target.float().reshape(-1, 1)
             loss = criterion(output, target)
             loss.backward()
