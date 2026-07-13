@@ -289,8 +289,8 @@ async def train_quantum(request: TrainRequest):
         import sys
         import os
         sys.path.append(os.path.dirname(__file__))
-        from quantum_mnist import train_quantum_model
-        print("✅ quantum_mnist imported successfully (lazy import)")
+        from quantum.quantum_mnist import train_quantum_model
+        print("✅ quantum.quantum_mnist imported successfully (lazy import)")
     except ImportError as e:
         print(f"❌ ImportError in lazy import: {e}")
         traceback.print_exc()
@@ -299,7 +299,7 @@ async def train_quantum(request: TrainRequest):
             content={
                 "status": "unavailable",
                 "error": "ImportError",
-                "message": f"quantum_mnist module not found: {str(e)}",
+                "message": f"quantum.quantum_mnist module not found: {str(e)}",
                 "chsh_score": QUANTUM_BADGE["chsh_s"],
                 "patent": QUANTUM_BADGE["patent"]
             }
@@ -312,7 +312,7 @@ async def train_quantum(request: TrainRequest):
             content={
                 "status": "unavailable",
                 "error": str(type(e).__name__),
-                "message": f"Error loading quantum_mnist: {str(e)}",
+                "message": f"Error loading quantum.quantum_mnist: {str(e)}",
                 "chsh_score": QUANTUM_BADGE["chsh_s"],
                 "patent": QUANTUM_BADGE["patent"]
             }
