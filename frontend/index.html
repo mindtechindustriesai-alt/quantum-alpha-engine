@@ -10,7 +10,7 @@
     
     <style>
         /* ============================================================
-           QUANTUM ALPHA ENGINE — FIXED LOGO VERSION
+           QUANTUM ALPHA ENGINE — OS LOGO VERSION
            ============================================================ */
         
         :root {
@@ -361,6 +361,8 @@
             overflow-y: auto;
             margin-top: 12px;
             border: 1px solid rgba(255,255,255,0.05);
+            min-height: 50px;
+            transition: all 0.3s ease;
         }
         
         .result-box .label {
@@ -582,7 +584,7 @@
                 <div class="footer-logos">
                     <img src="https://i.postimg.cc/QtyvGF3B/Quantum-AI-image-logo-removebg-preview.png" alt="Quantum AI" onerror="this.style.display='none'">
                     <img src="https://i.postimg.cc/zXW78GNH/Mind-Tech-Transparent-Logo.png" alt="MindTech" onerror="this.style.display='none'">
-                    <span class="footer-quantum">⚛️ QUANTUM AI</span>
+                    <img src="https://i.postimg.cc/ZnBJwLrn/os-finallogo-removebg-preview.png" alt="OS" onerror="this.style.display='none'">
                 </div>
                 <span style="display:block;margin-top:4px;">© 2026 Quantum Alpha Engine · Powered by MindTech Industries</span>
             </div>
@@ -645,6 +647,8 @@
             el.innerHTML = isError
                 ? `<span class="error">❌ ${content}</span>`
                 : `<span class="success">✅ ${content}</span>`;
+            // Ensure the result box is visible
+            el.style.display = 'block';
         }
 
         function showHeroResult(content) {
@@ -812,10 +816,15 @@
                     shots: 1024,
                     use_real_hardware: false
                 });
+                // Format the result with proper cost display
+                const accuracy = (data.accuracy * 100).toFixed(1);
+                const quantumCost = data.quantum_cost_usd || 0.0015;
+                const classicalCost = data.classical_cost_usd || 0.015;
+                const factor = data.quantum_factor || 10.0;
                 showResult('alphaResult',
-                    `Accuracy: ${(data.accuracy * 100).toFixed(1)}% | Quantum: $${data.quantum_cost_usd} | Classical: $${data.classical_cost_usd} | Factor: ${data.quantum_factor}x`);
+                    `✅ Accuracy: ${accuracy}% | Quantum: $${quantumCost} | Classical: $${classicalCost} | Factor: ${factor}x`);
                 log('✅ Quantum AI trained', 'success');
-                log(`💰 Quantum $${data.quantum_cost_usd} vs Classical $${data.classical_cost_usd}`, 'quantum');
+                log(`💰 Quantum $${quantumCost} vs Classical $${classicalCost} (${factor}x cheaper)`, 'quantum');
             } catch (e) {
                 showResult('alphaResult', 'Error: ' + e.message, true);
                 log('❌ Failed: ' + e.message, 'error');
