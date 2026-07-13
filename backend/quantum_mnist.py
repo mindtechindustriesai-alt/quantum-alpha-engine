@@ -1,5 +1,5 @@
 """
-MINDTECH QUANTUM AI TRAINING — SIMPLIFIED MNIST DEMO
+MINDTECH QUANTUM AI TRAINING — MNIST DEMO
 CHSH S=2.76 · IBM-verified · SA Patent 2026/05142
 """
 
@@ -9,7 +9,6 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 import numpy as np
-from datetime import datetime
 
 # Try to import qiskit — if it fails, use a mock
 try:
@@ -92,6 +91,7 @@ class HybridQuantumModel(nn.Module):
         else:
             self.quantum = nn.Linear(4, 2)
         
+        # Final output layer: 2 → 1 for binary classification
         self.output = nn.Linear(2, 1)
     
     def forward(self, x):
@@ -99,7 +99,8 @@ class HybridQuantumModel(nn.Module):
         x = x.reshape(-1, 4)
         x = self.quantum(x)
         x = self.output(x)
-        return x.squeeze(-1)
+        # Explicitly keep shape [batch_size, 1] for BCEWithLogitsLoss
+        return x
 
 def load_mnist_data(n_samples=100):
     """Load MNIST digits 0 and 1 for binary classification"""
@@ -149,7 +150,8 @@ def train_quantum_model(
     # Build model
     model = HybridQuantumModel(n_qubits=4, shots=shots)
     
-    criterion = nn.BCEWithLogitsLoss()
+    # Use BCEWithLogitsLoss with reduction='mean'
+    criterion = nn.BCEWithLogitsLoss(reduction='mean')
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     
     costs = {"quantum_shots": 0, "classical_ops": 0, "accuracy": 0, "loss": 0}
@@ -164,7 +166,9 @@ def train_quantum_model(
             costs["classical_ops"] += 28 * 28
             optimizer.zero_grad()
             output = model(data)
-            loss = criterion(output, target.float())
+            # Ensure target has same shape as output: [batch_size, 1]
+            target = target.float().reshape(-1, 1)
+            loss = criterion(output, target)
             loss.backward()
             optimizer.step()
             costs["quantum_shots"] += shots
@@ -184,6 +188,7 @@ def train_quantum_model(
     with torch.no_grad():
         for data, target in test_loader:
             output = model(data)
+            target = target.float().reshape(-1, 1)
             predicted = torch.round(torch.sigmoid(output))
             test_correct += (predicted == target).sum().item()
             test_total += target.size(0)
