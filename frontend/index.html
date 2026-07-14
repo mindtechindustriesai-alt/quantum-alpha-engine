@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Quantum Alpha Engine · MindTech Industries</title>
+    <title>Quantum Alpha Engine · Financial Intelligence</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         /* ============================================================
-           QUANTUM ALPHA ENGINE — OS LOGO VERSION
+           QUANTUM ALPHA ENGINE — FINANCIAL INTELLIGENCE DASHBOARD
            ============================================================ */
         
         :root {
@@ -77,7 +77,7 @@
             box-shadow: 0 12px 40px rgba(0, 180, 216, 0.15);
         }
         
-        /* ===== HEADER WITH BIGGER LOGO ===== */
+        /* ===== HEADER ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -92,34 +92,32 @@
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 20px;
         }
         
-        /* 2× BIGGER LOGO */
         .logo-img {
-            height: 160px;
+            height: 80px;
             width: auto;
-            filter: drop-shadow(0 0 30px rgba(0, 180, 216, 0.4));
-            opacity: 0.95;
-            background: rgba(15, 25, 45, 0.25);
+            filter: drop-shadow(0 0 20px rgba(0, 180, 216, 0.3));
+            opacity: 0.92;
+            background: rgba(15, 25, 45, 0.2);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            padding: 16px 24px;
-            border-radius: 28px;
-            border: 1.5px solid rgba(0, 180, 216, 0.25);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 180, 216, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             transition: all 0.4s ease;
         }
         
         .logo-img:hover {
             opacity: 1;
-            transform: scale(1.03);
+            transform: scale(1.02);
             border-color: var(--primary);
-            box-shadow: 0 8px 50px rgba(0, 180, 216, 0.25);
         }
         
         .brand-text h1 {
-            font-size: 30px;
+            font-size: 26px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary), var(--quantum));
             -webkit-background-clip: text;
@@ -128,7 +126,7 @@
         }
         
         .brand-text p {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-secondary);
             letter-spacing: 3px;
             font-family: var(--font-mono);
@@ -138,13 +136,13 @@
             background: rgba(138, 43, 226, 0.15);
             border: 1px solid var(--quantum);
             border-radius: 60px;
-            padding: 8px 20px;
+            padding: 8px 18px;
             font-size: 10px;
             font-family: var(--font-mono);
             color: var(--secondary);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 0 20px var(--quantum-glow);
         }
         
@@ -361,8 +359,6 @@
             overflow-y: auto;
             margin-top: 12px;
             border: 1px solid rgba(255,255,255,0.05);
-            min-height: 50px;
-            transition: all 0.3s ease;
         }
         
         .result-box .label {
@@ -388,6 +384,7 @@
             100% { transform: rotate(360deg); }
         }
         
+        /* ===== ACTION ROW ===== */
         .action-row {
             display: flex;
             gap: 12px;
@@ -433,15 +430,14 @@
         }
         
         .footer-logos img {
-            height: 40px;
+            height: 32px;
             width: auto;
-            opacity: 0.85;
-            transition: opacity 0.3s, transform 0.3s;
+            opacity: 0.7;
+            transition: opacity 0.3s;
         }
         
         .footer-logos img:hover {
             opacity: 1;
-            transform: scale(1.05);
         }
         
         .footer-quantum {
@@ -455,7 +451,7 @@
         @media (max-width: 768px) {
             .header { flex-direction: column; text-align: center; }
             .logo-area { flex-direction: column; }
-            .logo-img { height: 120px; padding: 12px 18px; }
+            .logo-img { height: 60px; }
             .hero-title { font-size: 28px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .footer { flex-direction: column; text-align: center; }
@@ -464,8 +460,8 @@
         }
         
         @media (max-width: 480px) {
-            .logo-img { height: 90px; padding: 8px 12px; }
-            .brand-text h1 { font-size: 22px; }
+            .logo-img { height: 48px; padding: 4px 10px; }
+            .brand-text h1 { font-size: 20px; }
             .hero-title { font-size: 22px; }
             .stat-value { font-size: 22px; }
             .btn-primary, .btn-secondary, .btn-quantum { font-size: 12px; padding: 8px 16px; }
@@ -481,10 +477,10 @@
         <!-- ===== HEADER ===== -->
         <header class="header">
             <div class="logo-area">
-                <img src="https://i.postimg.cc/sxBJ9S19/Quantum-Alpha-logo-(1).png" alt="Quantum Alpha Engine" class="logo-img" onerror="this.src='https://placehold.co/160x100/00B4D8/white?text=Quantum+Alpha'">
+                <img src="https://i.postimg.cc/sxBJ9S19/Quantum-Alpha-logo-(1).png" alt="Quantum Alpha Engine" class="logo-img" onerror="this.src='https://placehold.co/80x80/00B4D8/white?text=QAE'">
                 <div class="brand-text">
                     <h1>Quantum Alpha Engine</h1>
-                    <p>CHSH S=2.76 · IBM Verified · African Quantum AI</p>
+                    <p>Financial Intelligence · IBM Verified · African Quantum AI</p>
                 </div>
             </div>
             <div class="quantum-badge">
@@ -517,22 +513,21 @@
         <section class="hero">
             <div class="hero-eyebrow">⚛️ QUANTUM ALPHA ENGINE · IBM-VERIFIED</div>
             <h1 class="hero-title">
-                <span>Quantum AI</span> Training · 1/10th the Cost
+                <span>Financial Intelligence</span> Powered by CHSH S=2.76
             </h1>
             <p class="hero-desc">
-                <strong>CHSH S=2.76 · 38% above classical</strong><br>
-                Train AI models on quantum hardware at <strong>1/10th the cost</strong> of GPU data centers.
-                IBM-verified · Patent-protected · Built in Africa.
+                <strong>Generate alpha, optimize portfolios, and quantify risk</strong> using IBM-verified quantum entanglement.
+                38% above classical · 98.4% correlation · Patent-protected · Built in Africa.
             </p>
             <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;">
                 <button class="btn-quantum" onclick="fetchQuantumStatus()">
-                    <i class="fas fa-atom"></i> Quantum Status
+                    <i class="fas fa-atom"></i> Run Quantum Alpha
                 </button>
                 <button class="btn-primary" onclick="fetchStocks()">
-                    <i class="fas fa-chart-simple"></i> JSE Stocks
+                    <i class="fas fa-chart-simple"></i> Analyze Market
                 </button>
                 <button class="btn-secondary" onclick="fetchHealth()">
-                    <i class="fas fa-heartbeat"></i> Health
+                    <i class="fas fa-heartbeat"></i> System Health
                 </button>
             </div>
             <div id="heroResult" class="result-box" style="margin-top:16px;display:none;">
@@ -541,24 +536,24 @@
             </div>
         </section>
 
-        <!-- ===== QUANTUM ALPHA ===== -->
+        <!-- ===== QUANTUM FINANCIAL INTELLIGENCE ===== -->
         <div class="card">
             <div class="card-header">
-                <span class="card-title"><i class="fas fa-cube"></i> Quantum Alpha Calculation</span>
+                <span class="card-title"><i class="fas fa-cube"></i> Quantum Financial Intelligence</span>
                 <span style="font-size:10px;color:var(--text-secondary);font-family:var(--font-mono);">CHSH S=2.76 · MPS Tensor Network</span>
             </div>
             <div class="action-row">
                 <button class="btn-primary" onclick="calculateAlpha()">
-                    <i class="fas fa-calculator"></i> Calculate Alpha
+                    <i class="fas fa-calculator"></i> Generate Alpha
                 </button>
                 <button class="btn-secondary" onclick="optimizePortfolio()">
-                    <i class="fas fa-chart-pie"></i> Optimize Portfolio
+                    <i class="fas fa-chart-pie"></i> Optimize Holdings
                 </button>
                 <button class="btn-secondary" onclick="calculateRisk()">
-                    <i class="fas fa-shield-alt"></i> Risk Analysis
+                    <i class="fas fa-shield-alt"></i> Quantify Risk
                 </button>
                 <button class="btn-quantum" onclick="trainQuantum()">
-                    <i class="fas fa-brain"></i> Train Quantum AI
+                    <i class="fas fa-brain"></i> Train Quantum Models
                 </button>
             </div>
             <div id="alphaResult" class="result-box">
@@ -582,9 +577,10 @@
         <footer class="footer">
             <div class="footer-left">
                 <div class="footer-logos">
-                    <img src="https://i.postimg.cc/QtyvGF3B/Quantum-AI-image-logo-removebg-preview.png" alt="Quantum AI" onerror="this.style.display='none'">
                     <img src="https://i.postimg.cc/zXW78GNH/Mind-Tech-Transparent-Logo.png" alt="MindTech" onerror="this.style.display='none'">
-                    <img src="https://i.postimg.cc/ZnBJwLrn/os-finallogo-removebg-preview.png" alt="OS" onerror="this.style.display='none'">
+                    <img src="https://i.postimg.cc/RFQfK9k5/os-finallogo-removebg-preview.png" alt="MQOS" onerror="this.style.display='none'">
+                    <img src="https://i.postimg.cc/mgvTRnQZ/Gemini-Generated-Image-19nuyd19nuyd19nu.png" alt="Quantum" onerror="this.style.display='none'">
+                    <span class="footer-quantum">⚛️ QUANTUM AI</span>
                 </div>
                 <span style="display:block;margin-top:4px;">© 2026 Quantum Alpha Engine · Powered by MindTech Industries</span>
             </div>
@@ -594,7 +590,7 @@
                     IBM Job: d8uhvl4bp3hs738628cg
                 </div>
                 <span style="display:block;margin-top:4px;font-size:8px;color:var(--text-secondary);">
-                    · African Quantum AI
+                    ENSafrica Pro Bono · African Quantum AI
                 </span>
             </div>
         </footer>
@@ -628,7 +624,6 @@
         // ===== LOGGING =====
         function log(message, type = 'info') {
             const logEl = document.getElementById('activityLog');
-            if (!logEl) return;
             const time = new Date().toLocaleTimeString();
             const colors = {
                 info: 'var(--text-secondary)',
@@ -647,14 +642,11 @@
             el.innerHTML = isError
                 ? `<span class="error">❌ ${content}</span>`
                 : `<span class="success">✅ ${content}</span>`;
-            // Ensure the result box is visible
-            el.style.display = 'block';
         }
 
         function showHeroResult(content) {
             const el = document.getElementById('heroResult');
             const resp = document.getElementById('heroResponse');
-            if (!el || !resp) return;
             el.style.display = 'block';
             resp.textContent = typeof content === 'object' ? JSON.stringify(content, null, 2) : content;
         }
@@ -686,50 +678,53 @@
                 headers: { 'Content-Type': 'application/json' }
             };
             if (body) options.body = JSON.stringify(body);
+
             const response = await fetch(`${API_BASE}${endpoint}`, options);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return await response.json();
+            const data = await response.json();
+            return data;
         }
 
         // ===== FETCH QUANTUM STATUS =====
         async function fetchQuantumStatus() {
-            log('⚛️ Fetching quantum status...', 'quantum');
+            log('⚛️ Fetching quantum alpha...', 'quantum');
             try {
                 const data = await apiCall('/api/quantum/status');
                 document.getElementById('statChsh').textContent = data.chsh_s;
                 document.getElementById('statCorr').textContent = (data.correlation * 100).toFixed(1) + '%';
                 document.getElementById('statViolation').textContent = data.percent_above_classical + '%';
-                document.getElementById('badgeText').textContent = `CHSH S=${data.chsh_s} · ${(data.correlation * 100).toFixed(1)}% · ${data.patent}`;
+                document.getElementById('badgeText').textContent =
+                    `CHSH S=${data.chsh_s} · ${(data.correlation * 100).toFixed(1)}% · ${data.patent}`;
                 showHeroResult(data);
-                log('✅ Quantum status fetched', 'success');
+                log('✅ Quantum alpha ready', 'success');
             } catch (e) {
-                log('❌ Failed: ' + e.message, 'error');
+                log('❌ Failed to fetch quantum alpha: ' + e.message, 'error');
                 showHeroResult('Error: ' + e.message, true);
             }
         }
 
         // ===== FETCH STOCKS =====
         async function fetchStocks() {
-            log('📊 Fetching JSE stocks...', 'info');
+            log('📊 Analyzing market data...', 'info');
             try {
                 const data = await apiCall('/api/market/stocks');
+                const names = data.map(s => `${s.symbol} (${s.sector})`).join('\n');
                 showHeroResult(data);
-                log(`✅ Loaded ${data.length} stocks`, 'success');
+                log(`✅ Market data loaded: ${data.length} stocks`, 'success');
             } catch (e) {
-                log('❌ Failed: ' + e.message, 'error');
+                log('❌ Failed to fetch market data: ' + e.message, 'error');
                 showHeroResult('Error: ' + e.message, true);
             }
         }
 
         // ===== FETCH HEALTH =====
         async function fetchHealth() {
-            log('❤️ Checking health...', 'info');
+            log('❤️ Checking system health...', 'info');
             try {
                 const data = await apiCall('/health');
                 showHeroResult(data);
-                log('✅ Health check passed', 'success');
+                log('✅ System health check passed', 'success');
             } catch (e) {
-                log('❌ Failed: ' + e.message, 'error');
+                log('❌ System health check failed: ' + e.message, 'error');
                 showHeroResult('Error: ' + e.message, true);
             }
         }
@@ -737,22 +732,22 @@
         // ===== CALCULATE ALPHA =====
         async function calculateAlpha() {
             const btnId = 'alphaBtn';
-            const btn = document.getElementById(btnId);
-            if (btn) btn.dataset.original = btn.innerHTML;
+            storeOriginalText(btnId);
             setLoading(btnId, true);
-            log('📈 Calculating quantum alpha...', 'quantum');
+            log('📈 Generating quantum alpha...', 'quantum');
             try {
                 const data = await apiCall('/api/alpha', 'POST', {
                     stock_list: ['NPN', 'FSR', 'SBK', 'AGL', 'MTN'],
                     lookback_days: 252,
                     quantum_enhanced: true
                 });
-                const alphas = Object.entries(data.alphas).map(([k, v]) => `${k}: ${v}%`).join(' | ');
-                showResult('alphaResult', `Alpha: ${alphas} | Factor: ${data.quantum_factor}x`);
-                log('✅ Alpha calculated', 'success');
+                const alphas = Object.entries(data.alphas)
+                    .map(([k, v]) => `${k}: ${v}%`).join(' | ');
+                showResult('alphaResult', `Quantum Alpha: ${alphas} | Factor: ${data.quantum_factor}x | CHSH: ${data.chsh_score}`);
+                log(`✅ Alpha generated: ${alphas}`, 'success');
             } catch (e) {
                 showResult('alphaResult', 'Error: ' + e.message, true);
-                log('❌ Failed: ' + e.message, 'error');
+                log('❌ Alpha generation failed: ' + e.message, 'error');
             }
             setLoading(btnId, false);
         }
@@ -760,22 +755,23 @@
         // ===== OPTIMIZE PORTFOLIO =====
         async function optimizePortfolio() {
             const btnId = 'optimizeBtn';
-            const btn = document.getElementById(btnId);
-            if (btn) btn.dataset.original = btn.innerHTML;
+            storeOriginalText(btnId);
             setLoading(btnId, true);
-            log('📊 Optimizing portfolio...', 'quantum');
+            log('📊 Optimizing holdings...', 'quantum');
             try {
                 const data = await apiCall('/api/portfolio/optimize', 'POST', {
                     stocks: ['NPN', 'FSR', 'SBK', 'AGL', 'MTN', 'CPI'],
                     target_return: 0.12,
                     quantum_enhanced: true
                 });
-                const weights = Object.entries(data.weights).map(([k, v]) => `${k}: ${(v*100).toFixed(1)}%`).join(' | ');
-                showResult('alphaResult', `Portfolio: ${weights} | Sharpe: ${data.sharpe_ratio}`);
-                log('✅ Portfolio optimized', 'success');
+                const weights = Object.entries(data.weights)
+                    .map(([k, v]) => `${k}: ${(v*100).toFixed(1)}%`).join(' | ');
+                showResult('alphaResult',
+                    `Portfolio: ${weights} | Sharpe: ${data.sharpe_ratio} | Factor: ${data.quantum_factor}x`);
+                log(`✅ Holdings optimized: Sharpe ${data.sharpe_ratio}`, 'success');
             } catch (e) {
                 showResult('alphaResult', 'Error: ' + e.message, true);
-                log('❌ Failed: ' + e.message, 'error');
+                log('❌ Portfolio optimization failed: ' + e.message, 'error');
             }
             setLoading(btnId, false);
         }
@@ -783,32 +779,31 @@
         // ===== CALCULATE RISK =====
         async function calculateRisk() {
             const btnId = 'riskBtn';
-            const btn = document.getElementById(btnId);
-            if (btn) btn.dataset.original = btn.innerHTML;
+            storeOriginalText(btnId);
             setLoading(btnId, true);
-            log('🛡️ Calculating risk...', 'quantum');
+            log('🛡️ Quantifying risk...', 'quantum');
             try {
                 const data = await apiCall('/api/risk/var', 'POST', {
                     portfolio: { "NPN": 0.3, "FSR": 0.25, "SBK": 0.2, "AGL": 0.15, "MTN": 0.1 },
                     confidence_level: 0.95,
                     horizon_days: 10
                 });
-                showResult('alphaResult', `VaR: ${data.var_95}% | CVaR: ${data.cvar_95}% | Max DD: ${data.max_drawdown}%`);
-                log('✅ Risk calculated', 'success');
+                showResult('alphaResult',
+                    `VaR 95%: ${data.var_95}% | CVaR: ${data.cvar_95}% | Max DD: ${data.max_drawdown}% | Factor: ${data.quantum_factor}x`);
+                log(`✅ Risk quantified: VaR ${data.var_95}%`, 'success');
             } catch (e) {
                 showResult('alphaResult', 'Error: ' + e.message, true);
-                log('❌ Failed: ' + e.message, 'error');
+                log('❌ Risk quantification failed: ' + e.message, 'error');
             }
             setLoading(btnId, false);
         }
 
-        // ===== TRAIN QUANTUM AI =====
+        // ===== TRAIN QUANTUM MODELS =====
         async function trainQuantum() {
             const btnId = 'trainBtn';
-            const btn = document.getElementById(btnId);
-            if (btn) btn.dataset.original = btn.innerHTML;
+            storeOriginalText(btnId);
             setLoading(btnId, true);
-            log('🧠 Training quantum AI...', 'quantum');
+            log('🧠 Training quantum models...', 'quantum');
             try {
                 const data = await apiCall('/api/train/quantum', 'POST', {
                     epochs: 3,
@@ -816,23 +811,18 @@
                     shots: 1024,
                     use_real_hardware: false
                 });
-                // Format the result with proper cost display
-                const accuracy = (data.accuracy * 100).toFixed(1);
-                const quantumCost = data.quantum_cost_usd || 0.0015;
-                const classicalCost = data.classical_cost_usd || 0.015;
-                const factor = data.quantum_factor || 10.0;
                 showResult('alphaResult',
-                    `✅ Accuracy: ${accuracy}% | Quantum: $${quantumCost} | Classical: $${classicalCost} | Factor: ${factor}x`);
-                log('✅ Quantum AI trained', 'success');
-                log(`💰 Quantum $${quantumCost} vs Classical $${classicalCost} (${factor}x cheaper)`, 'quantum');
+                    `✅ Accuracy: ${(data.accuracy * 100).toFixed(1)}% | Quantum Cost: $${data.quantum_cost_usd} | Classical Cost: $${data.classical_cost_usd} | Factor: ${data.quantum_factor}x`);
+                log(`✅ Models trained: Accuracy ${(data.accuracy * 100).toFixed(1)}%`, 'success');
+                log(`💰 Quantum $${data.quantum_cost_usd} vs Classical $${data.classical_cost_usd} — ${data.quantum_factor}x cheaper`, 'quantum');
             } catch (e) {
                 showResult('alphaResult', 'Error: ' + e.message, true);
-                log('❌ Failed: ' + e.message, 'error');
+                log('❌ Training failed: ' + e.message, 'error');
             }
             setLoading(btnId, false);
         }
 
-        // ===== INIT =====
+        // ===== SETUP =====
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-primary, .btn-secondary, .btn-quantum').forEach(btn => {
                 if (!btn.dataset.original) {
@@ -842,9 +832,10 @@
             setTimeout(fetchQuantumStatus, 500);
             log('⚛️ Quantum Alpha Engine · Online', 'quantum');
             log('📡 Connected to: ' + API_BASE, 'info');
+            log('💡 Click a button to run a quantum calculation', 'info');
         });
 
-        console.log('⚛️ Quantum Alpha Engine · Interactive Dashboard');
+        console.log('⚛️ Quantum Alpha Engine · Financial Intelligence');
         console.log('   CHSH S=2.76 · 38% above classical');
         console.log('   Patent: SA 2026/05142');
         console.log('   IBM Job: d8uhvl4bp3hs738628cg');
