@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Quantum Alpha Engine · Financial Intelligence</title>
+    <title>Quantum Alpha Engine · MindTech Industries</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         /* ============================================================
-           QUANTUM ALPHA ENGINE — FINANCIAL INTELLIGENCE DASHBOARD
+           QUANTUM ALPHA ENGINE — FULL INTERACTIVE DASHBOARD
            ============================================================ */
         
         :root {
@@ -92,32 +92,33 @@
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 24px;
         }
         
         .logo-img {
-            height: 80px;
+            height: 120px;
             width: auto;
-            filter: drop-shadow(0 0 20px rgba(0, 180, 216, 0.3));
-            opacity: 0.92;
+            filter: drop-shadow(0 0 30px rgba(0, 180, 216, 0.4));
+            opacity: 0.95;
             background: rgba(15, 25, 45, 0.2);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            padding: 8px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 180, 216, 0.2);
+            padding: 12px 20px;
+            border-radius: 24px;
+            border: 1px solid rgba(0, 180, 216, 0.25);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             transition: all 0.4s ease;
         }
         
         .logo-img:hover {
             opacity: 1;
-            transform: scale(1.02);
+            transform: scale(1.03);
             border-color: var(--primary);
+            box-shadow: 0 0 40px rgba(0, 180, 216, 0.2);
         }
         
         .brand-text h1 {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary), var(--quantum));
             -webkit-background-clip: text;
@@ -126,7 +127,7 @@
         }
         
         .brand-text p {
-            font-size: 10px;
+            font-size: 11px;
             color: var(--text-secondary);
             letter-spacing: 3px;
             font-family: var(--font-mono);
@@ -451,7 +452,7 @@
         @media (max-width: 768px) {
             .header { flex-direction: column; text-align: center; }
             .logo-area { flex-direction: column; }
-            .logo-img { height: 60px; }
+            .logo-img { height: 80px; }
             .hero-title { font-size: 28px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .footer { flex-direction: column; text-align: center; }
@@ -460,7 +461,7 @@
         }
         
         @media (max-width: 480px) {
-            .logo-img { height: 48px; padding: 4px 10px; }
+            .logo-img { height: 60px; padding: 6px 12px; }
             .brand-text h1 { font-size: 20px; }
             .hero-title { font-size: 22px; }
             .stat-value { font-size: 22px; }
@@ -477,10 +478,10 @@
         <!-- ===== HEADER ===== -->
         <header class="header">
             <div class="logo-area">
-                <img src="https://i.postimg.cc/sxBJ9S19/Quantum-Alpha-logo-(1).png" alt="Quantum Alpha Engine" class="logo-img" onerror="this.src='https://placehold.co/80x80/00B4D8/white?text=QAE'">
+                <img src="https://i.postimg.cc/sxBJ9S19/Quantum-Alpha-logo-(1).png" alt="Quantum Alpha Engine" class="logo-img" onerror="this.src='https://placehold.co/120x120/00B4D8/white?text=QAE'">
                 <div class="brand-text">
                     <h1>Quantum Alpha Engine</h1>
-                    <p>Financial Intelligence · IBM Verified · African Quantum AI</p>
+                    <p>CHSH S=2.76 · IBM Verified · African Quantum AI</p>
                 </div>
             </div>
             <div class="quantum-badge">
@@ -578,9 +579,8 @@
             <div class="footer-left">
                 <div class="footer-logos">
                     <img src="https://i.postimg.cc/zXW78GNH/Mind-Tech-Transparent-Logo.png" alt="MindTech" onerror="this.style.display='none'">
-                    <img src="https://i.postimg.cc/RFQfK9k5/os-finallogo-removebg-preview.png" alt="MQOS" onerror="this.style.display='none'">
+                    <img src="https://i.postimg.cc/ZnBJwLrn/os-finallogo-removebg-preview.png" alt="MQOS" onerror="this.style.display='none'">
                     <img src="https://i.postimg.cc/mgvTRnQZ/Gemini-Generated-Image-19nuyd19nuyd19nu.png" alt="Quantum" onerror="this.style.display='none'">
-                    <span class="footer-quantum">⚛️ QUANTUM AI</span>
                 </div>
                 <span style="display:block;margin-top:4px;">© 2026 Quantum Alpha Engine · Powered by MindTech Industries</span>
             </div>
